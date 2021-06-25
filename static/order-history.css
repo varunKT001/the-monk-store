@@ -1,0 +1,279 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font-size: 14px;
+}
+.v109_6 {
+  width: 100%;
+  height: 1024px;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+  border-radius: 50px;
+}
+.logo {
+  width: 100%;
+  height: 87px;
+  left: 120px;
+  background: #fff;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+.brand_logo {
+  width: 318px;
+  height: 87px;
+  background: url("The Monk Store.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  opacity: 1;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+}
+.container{
+  height: 900px; 
+  width: 100%;
+  display: flex;
+  padding-top: 0px;
+  background-color: #ffda7a;
+  flex-direction: row; 
+  flex-wrap: wrap;
+  justify-content: center; 
+  align-content: center;
+  border-radius: 0px 0px 50px 50px;
+
+}
+  .container_1{
+  width: 100%;
+  background-color: #ffda7a;
+  height: 90px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  }          
+            
+  .item{
+  width: 200px;
+  height: 300px;
+  background-color: #fff;
+  margin: 10px;
+  padding: 3px;
+  border-radius: 20px;
+  }
+
+  #item-1{
+  font-family: Nunito;
+  font-weight: bold;
+  text-align: center;
+  }
+  .card {
+  max-width: 300px;
+  height: auto;
+  margin: auto;
+  text-align: center;
+  font-family: Nunito;
+  border-radius: 20px;
+}
+
+.price {
+  color: grey;
+  font-size: 12px;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 06px;
+  color: white;
+  background-color: #42caff;
+  text-align: center;
+  cursor: pointer;
+  width: 60%;
+  font-size: 14px;
+  border-radius: 20px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}
+
+  #item-2{
+  font-family: Nunito;
+  font-weight: bold;
+  text-align: center;  
+  }
+  .card {
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: Nunito;
+  border-radius: 20px;
+}
+
+.price {
+  color: grey;
+  font-size: 12px;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 06px;
+  color: white;
+  background-color: #42caff;
+  text-align: center;
+  cursor: pointer;
+  width: 60%;
+  font-size: 14px;
+  border-radius: 20px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}
+
+  #item-3{
+  font-family: Nunito;
+  font-weight: bold;
+  text-align: center;    
+  }
+  .card {
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: Nunito;
+  border-radius: 20px;
+}
+
+.price {
+  color: grey;
+  font-size: 12px;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 06px;
+  color: white;
+  background-color: #42caff;
+  text-align: center;
+  cursor: pointer;
+  width: 60%;
+  font-size: 14px;
+  border-radius: 20px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}
+
+  #item-4{
+  font-family: Nunito;
+  font-weight: bold;
+  text-align: center;    
+  }
+  .card {
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: Nunito;
+  border-radius: 20px;
+}
+
+.price {
+  color: grey;
+  font-size: 12px;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 06px;
+  color: white;
+  background-color: #42caff;
+  text-align: center;
+  cursor: pointer;
+  width: 60%;
+  font-size: 14px;
+  border-radius: 20px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}
+
+  #item-5{
+  font-family: Nunito;
+  font-weight: bold;
+  text-align: center;    
+  }
+  .card {
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: Nunito;
+  border-radius: 20px;
+}
+
+.price {
+  color: grey;
+  font-size: 12px;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 06px;
+  color: white;
+  background-color: #42caff;
+  text-align: center;
+  cursor: pointer;
+  width: 60%;
+  font-size: 14px;
+  border-radius: 20px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}        
+      
+  #item-6{
+  font-family: Nunito;
+  font-weight: bold;
+  text-align: center;    
+  }
+  .card {
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: Nunito;
+  border-radius: 20px;
+}
+
+.price {
+  color: grey;
+  font-size: 12px;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 06px;
+  color: white;
+  background-color: #42caff;
+  text-align: center;
+  cursor: pointer;
+  width: 60%;
+  font-size: 14px;
+  border-radius: 20px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}

@@ -1,0 +1,25 @@
+.spinner{
+    position: absolute;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    background: transparent;
+    background-color: rgba(95, 95, 95, 0.5)
+}
+
+.circle{
+    width: 40px;
+    height: 40px;
+    border: 7px solid lightblue;
+    border-top: 7px solid blue;
+    border-radius: 50%;
+    animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner{
+    100% {
+        transform: rotate(360deg);
+    }
+}

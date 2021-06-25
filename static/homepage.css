@@ -1,0 +1,331 @@
+body{
+    height: 100%;
+    background-color:white;
+    font-family: nunito;
+}
+.topbar{
+     display: flex;
+     justify-content: flex-start;
+     align-items:flex-start;
+     flex-wrap: wrap;
+     position: fixed;
+     width: 100%;
+     height: fit-content;
+     top: 0px;
+     background-color:white ;
+     z-index: 2;
+}
+.itemLogo img{
+   border-radius: 111px; 
+   margin-top: 10px;
+}
+
+.poster{
+    position: absolute;
+    top: 75%;
+    left: 23%;
+    width: 75%;
+    height: 75%;
+    border: 1px solid orange;
+    border-radius: 10px;
+}
+.poster-image{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+ 
+ input{
+    width: 750px;
+    height: 50px;
+    border: 1px solid orange;
+    font-size: 20px;
+    outline: none;
+    margin-left: 90px;
+    margin-top: 10px;
+    border-radius: 10px;
+    
+}
+.searchBtn{
+    width: 70px;
+    height: 52px;
+    border: 0px white;
+    outline: none;
+    background-color: #1E4E5F;
+    margin-left: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    
+}
+i{
+    color: #BABABA;
+    
+}
+.search{
+    display: flex;
+}
+.user-details{
+    position: relative;
+    transform: translate(-3%, -9rem);
+    font-size: 25px;
+    font-weight: bold;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+.container1{
+    position: fixed; 
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-top: 160px;
+    width: 300px;
+    height: 430px;
+    border-radius: 50px;
+    background-color: #FFDA7A;
+    
+}
+.container1::before{
+    content: "";
+    background-image: url(icons/profile_avatar.png);
+    background-size: 120px 120px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid orange;
+    background-color: #ffda7a;
+    transform: translate(55%, -115%);
+}
+.sidenav{
+    margin: 20px 0px;
+    
+}
+.item{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 30px;
+}
+.sidenav a{
+    text-decoration: none;
+    color: black;
+    font-size: 15px;
+}
+.Logout{
+    margin-left: 25px;
+    margin-top: 0px;
+    font-size: 15px;
+    font-family: nunito;
+    border: none;
+    background-color: #FFDA7A;
+}
+.line{
+    margin-left: 10px;
+    height: 3px;
+    width: 280px;
+    background-color: #FDBD28;
+    border-radius: 100px;
+}
+
+.grid{
+    width: 1040px;
+    height: 320px;
+    position: absolute;
+    left: 400px;
+    top: 110px;
+    background-color: #f1eeff;
+    display: grid;
+    grid-template-rows: 150px;
+    grid-template-columns: 200px 200px 200px;
+    column-gap: 180px;
+    row-gap: 30px;
+    border-radius: 20px;
+    border: 1px solid #e5e0fc;
+}
+
+ p{
+
+    background-color: #FFF;
+    text-align: center;
+    font-size: 15px;
+}
+
+.product{
+    height: 250px;
+    width: 250px;
+    background-color: #F9F9F9;
+    /* margin-left: 25px; */
+    margin-top: 35px;
+    box-shadow:5px 5px 5px rgb(204, 204, 204);
+    border-radius: 20px;
+}
+#pro1{
+   margin-left: 20px;
+}
+.options{
+    position: absolute;
+    top: 120px;
+    left: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 200px;
+    height: 150px;
+    overflow: hidden;
+    justify-items: center;
+}
+.options a{
+    text-decoration: none;
+    color: white;
+    }
+.options p{
+    padding: 0px 20px;
+    background-color: #3B72FF;
+    border-radius: 10px;
+}
+.options img{
+    padding-left: 25px;
+    width: 20px;
+    height: 20px;
+}
+#option2 img{
+    padding-left: 23px;   /*I gave separate padding for it because it was going too much to the right*/
+}
+
+#option1{    /* to merge top two cells of the grid together and form the required design*/
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+
+
+@media only screen and (max-width: 1455px){
+    .container1{
+        position: fixed;
+        width: 270px;
+    }
+    .line{
+        width: 220px;
+    }
+    .options{
+        left:25px
+    }
+    .grid{
+        left: 300px;
+    }
+    
+}
+@media only screen and (max-width: 1300px) {
+    .container1{
+        top: 350px;
+        left: 25px;
+        height: 210px;
+        width: 600px;
+    }        
+.grid{
+    left: 20px;
+    top: 170px;
+    
+}
+.options{
+    position: absolute;
+    top: 10px;
+    left: 300px;
+}
+}
+@media only screen and (max-width:1080px){
+    .grid{
+         width: 700px;
+    grid-template-columns: 150px 150px 150px; 
+    column-gap: 100px;
+    }
+    .product{
+        height: 200px;
+        width: 180px;
+    }
+
+}
+@media only screen and (max-width: 890px){
+    input{
+    width: 400px;
+    margin-left: 0px;
+    }
+    
+    
+}
+@media only screen and (max-width: 740px){
+    .topbar{
+        height: 160px;
+    }
+    .grid{
+        width: 230px;
+    height: 750px;
+    left: 20px;
+    grid-template-rows: 150px 150px 150px;
+    grid-template-columns: 150px ;
+    row-gap: 100px;
+    }
+    .product{
+        margin-left: 20px;
+    }
+    .container1{
+        position: absolute;
+        top: 30px;
+        left: 300px;
+        width: 250px;
+        height: 550px;    
+    }
+    .options{
+        position: absolute;
+        top: 100px;
+        left: 0px;
+    }
+    .line{
+        width: 230px;
+    }
+    
+}
+@media only screen and (max-width: 350px){
+    
+    .itemLogo img{
+        width: 200px;
+        height: 50px;
+        border-radius: 80px;
+    }
+    input{
+        width: 250px;
+        height: 35px;
+    }
+    .searchBtn{
+        width: 55px;
+        height: 35px;
+    }
+    .container1{
+        width: 200px;
+        left: 250px;
+    }
+    .options{
+      grid-template-columns: 80px 80px;
+      left: 20px;
+    }
+    .options img{
+        height: 17px;
+        padding-left: 15px;
+    }
+    #option2 img{
+        padding-left: 10px}
+    .options p{
+        font-size: 10px;
+        padding: 0px 10px;
+    }
+    .sidenav a{
+        font-size: 15px;
+    }
+    .line{
+        width: 180px;
+    }
+    .Logout{
+        font-size: 15px;
+    }
+}

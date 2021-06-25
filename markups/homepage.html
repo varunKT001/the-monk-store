@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width">
+    <title>The Monk Store</title>
+    <link rel="stylesheet" href="homepage.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Nunito"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <div class="topbar">
+      <div class="itemLogo"><a href="/homepage"><img src="images/The Monk store.png" height="75px" width="300px"></a></div>
+
+      <div class="search">
+      <div class="Searchbar">
+          <input type="text" placeholder=" Search.."> </div>
+      
+      <div class="SearchButton">
+          <button type="submit" class="searchBtn">
+          <i class="fa fa-search fa-2x"></i>
+          </button>
+      </div>
+      </div>
+  </div>
+
+  <div class="container1">
+  <div class="user-details">Hi, ${user.name}</div>
+  <div class="options">
+      <a href="profile.html" id="option1"><img src="icons/pencil 1.png" height="25px"><br> <p>Edit</p></a>
+      <a href="cart.html" id="option2"><img src="icons/shopping-cart 1.png" height="25px"><br><p> Cart</p></a>
+      <a href="/order-history" id="option3"><img src="icons/Time Machine.png" height="25px"><br><p> Orders</p></a>
+  </div>
+
+  <div class="sidenav">
+      <div class="line item" id="one"></div>
+      <a href="/settings" class="item"><b>Settings</b></a>
+      <div class="line item" id="two"></div>
+      <a href="/feedback" class="item"><b>Help & Feedback</b></a>
+      <div class="line item" id="three"></div>
+      <form action="/logout" method="get">
+      <button class="Logout item" type="submit"><b>Log out</b></button>
+      </form>
+      <div class="line" id="four"></div>
+  </div>
+
+  </div>
+  
+  <div class="grid">
+      <div class="product" id="pro1"><p id="start"><b> Phones <img src="icons/down-arrow 1.png" width="20px"></b></p></div>
+      <div class="product"><p><b> Laptops <img src="icons/down-arrow 1.png" width="20px"></b></p></div>
+      <div class="product" id="pro3"><p id="end"><b> Storages <img src="icons/down-arrow 1.png" width="20px"></b></p></div>
+  </div>
+  
+  <div class="poster">
+      <img class="poster-image" src="images/covidPoster.jpeg">
+  </div>
+</body>
+</html>
