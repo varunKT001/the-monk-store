@@ -1,78 +1,205 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" >
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet"/>
-<link href="order-history.css" rel="stylesheet" />
-<title>Order history</title>
+  <meta charset="UTF-8">
+  <title>The Monk Store</title>
+<link rel="stylesheet" href="order history.css">
+
 </head>
 <body>
-	<div class="v109_6">
-		<div class="logo">
-		   <div class="logo">
-            <img src="images/The Monk Store.png" alt="" srcset="">
-		   </div>
-		</div>
-                <div class="container">
-                	<div class="container_1">
-                			<h1>Order History</h1>
-                	</div>
-                   <div class="item" id="item-1">Item-1
-                   <div class="card">
-                        <img src="images/mi 11x.jpg" alt="smartphone" style="width:30%" height="30%">
-                            <h6>MI 11X Pro</h6>
-                               <p class="price">Rs.39,999.00/-</p>
-                               <h6>Mi 11X Pro 5G (Lunar White, 8GB RAM, 128GB Storage) | Snapdragon 888 | 108MP Camera </h6>
-                               <p><button>Ordered</button></p>
-                          </div>
-                       </div>
-                   <div class="item" id="item-2">Item-2
-                   <div class="card">
-                        <img src="images/hp 15s.jpg" alt="laptop" style="width:47%" height="47%">
-                            <h6>HP 15s</h6>
-                               <p class="price">Rs.64,018/-</p>
-                               <h6>hp 15s (Mint Grey, 8GB RAM, 1TB HDD, 256 SSD) | Dedicated Graphics Card 2GB</h6>
-                               <p><button>Ordered</button></p>
-                          </div>
-                       </div>
-                   <div class="item" id="item-3">Item-3
-                   <div class="card">
-                        <img src="images/wd elements.jpg" alt="Headphone" style="width:41%" height="41%">
-                            <h6>WD Elements 1TB</h6>
-                               <p class="price">Rs.3,799.00/-</p>
-                               <h6>Portable External Hard Drive (Black)</h6>
-                               <p><button>Ordered</button></p>
-                          </div>
-                       </div>
-                   <div class="item" id="item-4">Item-4
-                   <div class="card">
-                        <img src="images/lenevo.jpg" alt="Lenevo" style="width:40%" height="40%">
-                            <h6>Lenovo Legion Y540</h6>
-                               <p class="price">Rs.64,880.00/-</p>
-                               <h6>Intel i5 9th Gen 15.6" Gaming (8GB/256 SSD+1TD HDD/Win10/NVIDIA GeForce GTX 1650 4GB/Raven Black/2.3kg) </h6>
-                               <p><button>Ordered</button></p>
-                          </div>
-                       </div>
-                   <div class="item" id="item-5">Item-5
-                   <div class="card">
-                        <img src="images/samsung.jpg" alt="Samsung" style="width:42%" height="42%">
-                           <h6>Samsung Galaxy M11</h6>
-                               <p class="price">Rs.8,999.00/-</p>
-                               <h6>Metallic Blue, 4GB RAM, 64GB Storage </h6>
-                               <p><button>Ordered</button></p>
-                          </div>
-                       </div>
-                   <div class="item" id="item-6">Item-6
-                   <div class="card">
-                        <img src="images/Sandisk.jpg" alt="Pendrive" style="width:35%" height="35%">
-                            <h6>SanDisk Ultra Dual Drive</h6>
-                               <p class="price">Rs.1,479.00/-</p>
-                              <h6>Type C Pendrive for Mobile 128GB, 5Y - SDDDC3-128G-I35 </h6>
-                               <p><button>Ordered</button></p>
-                          </div>
-                       </div>
-                   
-		</div>
-	</body>
+<div class="container">
+
+  <div class="row">
+    <div class="order-tittle">
+      <a href="/homepage"><img src="The Monk Store.png" height="80px" width="250px"><a>
+    </div>
+  </div>
+
+  <div class="row title-row">
+    <div class="page-title">
+      <h1>Order History</h1>
+    </div>
+  </div>  
+  
+  <div class="row order_sorter">
+    <ul id="toggle-orders">
+      <li class="first"></li>
+      <li class="oh selected"><a href="#">Order History</a></li>
+      <li class="fo"><a href="#">Cart Deck</a></li>
+    </ul>
+  </div>
+
+  <div class="row" id="order-history">
+
+    <div class="row order-summary">
+      <div class="totalspent-orders">
+        <h2>Rs.1,30,525.00</h2>
+        <h3>Total Spent</h3>
+      </div>
+      <div class="printqty-orders">
+        <h2>05</h2>
+        <h3>Total Orders</h3>
+      </div>
+      <div class="total_gst">
+        <h2>Rs.350.00</h2>
+        <h3>Total GST Paid</h3>
+      </div>
+      <div class="ytd-orders">
+        <h2>01</h2>
+        <h3>Refund Request</h3>
+      </div>
+    </div>
+           
+    <div class="order-container">
+      <div class="header">
+        <div class="row">
+          <div class="col-1"><span>ORDERS PLACED</span><span>Jun 27, 2021</span></div>
+          <div class="col-2"><span>TOTAL</span><span>Rs.74,999/-</span></div>
+          <div class="col-3"><span>SHIPPED TO</span><span>Varun Kumar Tiwari</span></div>
+          <div class="col-4"><span>ORDER NUMBER</span><span>XXXXX</span></div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="row">
+          <div class="col-1">
+            <img src="lenevo leigon.jpg" alt="">
+          </div>
+          <div class="col-2">
+            <span class="product-title">Lenovo Legion 5 AMD Ryzen 5 4600H 15.6 inch (39.62 cms) Full HD Gaming Laptop (8GB/1TB HDD + 256GB SSD/Windows 10/120 Hz/NVIDIA GTX 1650 4GB GDDR6 Graphics/Phantom Black/2.3Kg)</span>
+            <p>Order Status: Delivered <br>
+            Total Quantity: 1 <br>
+            Billed On: Jun 27, 2021 </p>
+            <a href="#" class="btn-default"><i class="fa fa-repeat" aria-hidden="true"></i> Re-Order</a>
+          </div>
+          <div class="col-3">
+           <a href="#" class="btn-default"><i class="fa fa-download" aria-hidden="true"></i> Download Bill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+      
+      
+      
+  <div id="future-orders">    
+    <div class="order-container">
+      <div class="header">
+        <div class="row">
+          <div class="col-1"><span>ORDERS PLACED</span><span>Jan 09, 2021</span></div>
+          <div class="col-2"><span>TOTAL</span><span>Rs.9,499.00/-</span></div>
+          <div class="col-3"><span>SHIPPED TO</span><span>Varun Kumar Tiwari</span></div>
+          <div class="col-4"><span>ORDER NUMBER</span><span>XXXXX</span></div>
+        </div>
+      </div>
+       <div class="box"> 
+        <div class="row">
+          <div class="col-1">
+            <img src="smsung.jpg" alt="">
+          </div>
+          <div class="col-2">
+            <span class="product-title">Samsung Galaxy M11 (Black, 4GB RAM, 64GB Storage)<i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+            <p>Order Status: Delivered <br>
+            Total Quantity 01 <br>
+            Billed On: Jan 09, 2021 </p>
+           <a href="#" class="btn-default"><i class="fa fa-repeat" aria-hidden="true"></i> Re-Order</a>
+          </div>
+          <div class="col-3">
+           <a href="#" class="btn-default"><i class="fa fa-download" aria-hidden="true"></i> Download Bill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div id="future-orders-1">    
+    <div class="order-container">
+      <div class="header">
+        <div class="row">
+          <div class="col-1"><span>ORDERS PLACED</span><span>Dec 28, 2020</span></div>
+          <div class="col-2"><span>TOTAL</span><span>Rs.11,839.00/-</span></div>
+          <div class="col-3"><span>SHIPPED TO</span><span>Varun Kumar Tiwari</span></div>
+          <div class="col-4"><span>ORDER NUMBER</span><span>XXXXX</span></div>
+        </div>
+      </div>
+       <div class="box"> 
+        <div class="row">
+          <div class="col-1">
+            <img src="Sandisk.jpg" alt="">
+          </div>
+          <div class="col-2">
+            <span class="product-title">SanDisk Ultra Dual Drive Luxe Type C Flash Drive 1TB, 5Y - SDDDC4-1T00-I35<i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+            <p>Order Status: Delivered <br>
+            Total Quantity 01 <br>
+            Billed On: Dec 28, 2020 </p>
+           <a href="#" class="btn-default"><i class="fa fa-repeat" aria-hidden="true"></i> Re-Order</a>
+          </div>
+          <div class="col-3">
+           <a href="#" class="btn-default"><i class="fa fa-download" aria-hidden="true"></i> Download Bill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div id="future-orders-2">    
+    <div class="order-container">
+      <div class="header">
+        <div class="row">
+          <div class="col-1"><span>ORDERS PLACED</span><span>Jul 11, 2020</span></div>
+          <div class="col-2"><span>TOTAL</span><span>Rs. 3,839.00/-</span></div>
+          <div class="col-3"><span>SHIPPED TO</span><span>Varun Kumar Tiwari</span></div>
+          <div class="col-4"><span>ORDER NUMBER</span><span>XXXXX</span></div>
+        </div>
+      </div>
+       <div class="box"> 
+        <div class="row">
+          <div class="col-1">
+            <img src="wd elements.jpg" alt="">
+          </div>
+          <div class="col-2">
+            <span class="product-title">Western Digital Elements 1TB Portable External Hard Drive (Black)<i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+            <p>Order Status: Delivered <br>
+            Total Quantity 01 <br>
+            Billed On: Jul 11, 2020 </p>
+           <a href="#" class="btn-default"><i class="fa fa-repeat" aria-hidden="true"></i> Re-Order</a>
+          </div>
+          <div class="col-3">
+           <a href="#" class="btn-default"><i class="fa fa-download" aria-hidden="true"></i> Download Bill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div id="future-orders-3">    
+    <div class="order-container">
+      <div class="header">
+        <div class="row">
+          <div class="col-1"><span>ORDERS PLACED</span><span>Jul 11, 2020</span></div>
+          <div class="col-2"><span>TOTAL</span><span>Rs.29,999.00/-</span></div>
+          <div class="col-3"><span>SHIPPED TO</span><span>Varun Kumar Tiwari</span></div>
+          <div class="col-4"><span>ORDER NUMBER</span><span>XXXXX</span></div>
+        </div>
+      </div>
+       <div class="box"> 
+        <div class="row">
+          <div class="col-1">
+            <img src="mi 11x.jpg" alt="">
+          </div>
+          <div class="col-2">
+            <span class="product-title">Mi 11X 5G Celestial Silver 6GB RAM 128GB ROM | SD 870 | DisplayMate A+ rated E4 AMOLED<i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+            <p>Order Status: Delivered <br>
+            Total Quantity 01 <br>
+            Billed On: Jul 11, 2020 </p>
+           <a href="#" class="btn-default"><i class="fa fa-repeat" aria-hidden="true"></i> Re-Order</a>
+          </div>
+          <div class="col-3">
+           <a href="#" class="btn-default"><i class="fa fa-download" aria-hidden="true"></i> Download Bill</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>      
+</div>
+</body>
 </html>
+

@@ -7,6 +7,7 @@
     width: 50%;
     height: 40px;
     font-size: 20px;
+    font-family: poppins, sans-serif;
     padding: 10px 20px;
     border-radius: 10px;
     animation: slideFromTop 250ms ease-in;

@@ -135,9 +135,9 @@ app.post('/register', (req, res)=>{
         email: req.body.email,
         password: req.body.password,
         verified: false,
-        phoneNumber: "Not set", 
-        address: "Not set",
-        gender: "Not set"
+        phoneNumber: "NA", 
+        address: "NA",
+        gender: "NA"
     }
 
     console.log('Register request recieved', newUser)
