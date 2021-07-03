@@ -25,6 +25,7 @@ function notificationRender(message_type, message_text, fileName) {
                             <meta charset="UTF-8">
                             <title>Settings</title>
                             <link rel="stylesheet" href="settings.css">
+                            <link rel="stylesheet" href="footer.css">
                             </head>`
 
     if (message_type) {
@@ -55,7 +56,7 @@ function notificationRender(message_type, message_text, fileName) {
                     </script>
                     <div class="container">
                         <form class="form" id="login" method="POST" action="/login">
-                        <img class="brand-logo" src="images/The Monk Store.png" alt="" />
+                        <img class="brand-logo" src="icons/3.png" alt="" />
                         <h1 class="form__title">Login</h1>
                         <div class="form__message form__message--error"></div>
                         <div class="form__input-group">
@@ -99,7 +100,7 @@ function notificationRender(message_type, message_text, fileName) {
                                     </script>
                                     <div class="container">
                                         <form class="form" id="createAccount" method="POST" action="/register">
-                                            <img class="brand-logo" src="images/The Monk Store.png" alt="" />
+                                            <img class="brand-logo" src="icons/3.png" alt="" />
                                             <h1 class="form__title">Create Account</h1>
                                             <div class="form__message form__message--error"></div>
                                             <div class="form__input-group">
@@ -226,6 +227,7 @@ function notificationRender(message_type, message_text, fileName) {
                                                 </div>
                                             </div>
                                             </div>
+                                            <p class="copyright">&copy Copyrights. All rights reservered, 2021</p>
                                         </body>`
     return settings
     }
@@ -260,6 +262,7 @@ const pageRender = (user, page)=>{
                                 <meta charset="UTF-8">
                                 <title>The Monk Store</title>
                                 <link rel="stylesheet" href="order-history.css">
+                                <link rel="stylesheet" href="footer.css">
                                 </head>`
 
     const layoutForgotPasswordEmail = `<!DOCTYPE html>
@@ -297,6 +300,7 @@ const pageRender = (user, page)=>{
                             <meta charset="UTF-8">
                             <title>Settings</title>
                             <link rel="stylesheet" href="settings.css">
+                            <link rel="stylesheet" href="footer.css">
                             </head>`
     
     if (page == 'homepage'){
@@ -594,6 +598,7 @@ const pageRender = (user, page)=>{
                                                     
                                                     </div>      
                                                     </div>
+                                                    <p class="copyright">&copy Copyrights. All rights reservered, 2021</p>  
                                                     </body>`
 
         return orderHistory
@@ -714,6 +719,7 @@ const pageRender = (user, page)=>{
                                                 </div>
                                             </div>
                                             </div>
+                                            <p class="copyright">&copy Copyrights. All rights reservered, 2021</p>
                                         </body>`
     return settings
     }

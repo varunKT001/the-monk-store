@@ -37,8 +37,9 @@ body::before{
     margin-bottom: 0;
 }
 .brand-logo {
-    width: 390px;
-    height: 70px;
+    width: 150px;
+    height: 150px;
+    transform: translate(83%, -10%);
 }
 .form__title {
     margin-bottom: 2rem;
