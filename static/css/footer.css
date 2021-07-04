@@ -1,0 +1,10 @@
+:root {
+  padding: 1.5rem;
+}
+
+.copyright {
+  text-align: center;
+  background-color: #6c63;
+  margin: 0;
+  padding: 1rem;
+}

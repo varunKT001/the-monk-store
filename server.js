@@ -1,23 +1,50 @@
+require('dotenv').config()
+
 const PORT = process.env.PORT || 5000
 
-const EMAIL = 'keplons@outlook.com'
-const PASS = 'Keplonrusk8878'
+const EMAIL = process.env.EMAIL
+const PASS = process.env.PASS
 
-const {notificationRender, pageRender} = require('./files')
-const {readFileSync, writeFileSync} = require('fs')
+
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  P A C K A G E S  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+
+/*---------- CUSTOM RENDER FUNCTIONS ----------*/
+const {notificationRender, pageRender} = require('./misc/files')
+
+/*---------- GLOBAL PATH MODULE TO RESOLVE PATHS ----------*/
 const path = require('path')
-const flash = require('connect-flash')
+
+/*---------- COOKIE PARSER TO PARSE COOKIES SENT BY BROWSER ----------*/
 const cookieParser = require('cookie-parser')
+
+/*---------- USING EXPRESS SESSIONS TO FLASH SUCCESS OR ERROR MSG TO USER USING CONNECT FLASH ----------*/
+const flash = require('connect-flash')
 const session = require('express-session')
+
+/*---------- USING JWT LIBRARY TO SIGN AND VERIFY TOKENS ----------*/
 const jwt = require('jsonwebtoken')
-const nodemailer = require('nodemailer')
-const { pool } = require('./dbconfig.js')
+
+/*---------- USIGN NODEMAILER TO SEND EMAILS ----------*/
+const { transport } = require('./config/nodemailerConfig')
+
+/*---------- REQUIRING POOL USING DBCONFIG TO CONNECT TO DB AND MAKE QUERIES ----------*/
+const { pool } = require('./config/dbconfig')
+
+/*---------- EXPRESS TO SETUP THE SERVER ----------*/
 const express = require('express')
 const app = express()
 
+
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  M I D D L E - W A R E S  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+
+/*---------- USING SOME NECESSARY MIDDLEWARES ----------*/
 app.use(cookieParser())
 app.use(express.static('./static'))
 app.use(express.urlencoded({extended: false}))
+
+/*---------- SETTING UP EXPRESS SESSIONS ----------*/
 app.use(session({
     secret: 'bhothard',
     resave: false,
@@ -26,16 +53,14 @@ app.use(session({
         maxAge: 1000*3
     }
 }))
+
+/*---------- USING FLASH ----------*/
 app.use(flash())
 
-const transport = nodemailer.createTransport({
-    service: 'outlook',
-    auth: {
-        user: EMAIL,
-        pass: PASS
-    }
-})
-
+/*---------- CUSTOM MIDDLEWARE: FOR CHECKING IF THE USER IS AUTHORIZED OR NOT ----------*/
+/*---------- IT USES JWT TOKEN SEND USING A COOKIE TO VERIFY ----------*/
+/*---------- IF VERIFIED: IT CALLS NEXT MIDDLEWARE ----------*/
+/*---------- IF NOT VERIFIED: REDIRECTS TO LOGIN PAGE ----------*/
 const checkAuthorization = (req, res, next)=>{
     if(req.cookies.token){
         const token = req.cookies.token
@@ -44,6 +69,8 @@ const checkAuthorization = (req, res, next)=>{
                 return res.redirect('/login')
             }
             req.user = userDetails.user
+
+            /*---------- PREVENTING ANY CACHING DONE BY THE BROWSER ----------*/
             res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, post-check=0, pre-check=0')
             next()
         })
@@ -53,6 +80,9 @@ const checkAuthorization = (req, res, next)=>{
     }
 }
 
+/*---------- CUSTOM HELPER FUNCTIONS:  ----------*/
+
+/*---------- RETURNS A USER USING THE USERNAME ----------*/
 const getUserByUsername = async (username)=>{
     try{
     const user = await pool.query(`SELECT * FROM users WHERE name = $1`, [username])
@@ -63,6 +93,7 @@ const getUserByUsername = async (username)=>{
     }
 }
 
+/*---------- RETURNS A USER USING THE ID ----------*/
 const getUserByID = async (id)=>{
     try{
     const user = await pool.query(`SELECT * FROM users WHERE id = $1`, [id])
@@ -73,6 +104,7 @@ const getUserByID = async (id)=>{
     }
 }
 
+/*---------- RETURNS A USER USING THE EMAIL ----------*/
 const getUserByEmail = async (email)=>{
     try{
     const user = await pool.query(`SELECT * FROM users WHERE email = $1`, [email])
@@ -82,6 +114,10 @@ const getUserByEmail = async (email)=>{
         throw err
     }
 }
+
+
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  R O U T E S  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
 
 app.get('/', checkAuthorization, (req, res)=>{
     res.redirect('/homepage')
@@ -109,20 +145,29 @@ app.post('/login', async (req, res)=>{
 
     const user = await getUserByUsername(newUser.name)
 
+    /*---------- CHECKING IF THE CREDENTIALS ENTERED ARE CORRECT OR NOT ----------*/
     if(!user){
         return res.send(notificationRender(false, 'User not found!', 'login'))
-        // return res.redirect('/login')
     }
     if(!(user.password == newUser.password)){
         return res.send(notificationRender(false, 'Password incorrect!', 'login'))
-        // return res.redirect('/login')
     }
+    /*---------- CHECKING CREDENTIALS END ----------*/
+
+    /*---------- CHECKING IF USER IS VERIFIED OR NOT ----------*/
+    /*---------- IF VERIFIED: CAN LOGIN TO THE SITE ----------*/
+    /*---------- IF NOT VERIFIED: USER NEED TO VERIFY USING THE VERIFICATION LINK SENT TO EMAIL ADDRESS ----------*/
     if(user.verified == 'false'){
         return res.send(notificationRender(false, 'Please verify your email to continue!', 'login'))
-        // return res.redirect('/login')
     }
+    /*---------- CHECKING VERIFICATION ENDS ----------*/
+
+    /*---------- CREATING A USER SESSION USING JWT AND IMPLEMENTING USING COOKIES ----------*/
+    /*---------- SESSIONS LAST FOR ABOUT 20 MINUTES ----------*/
     const token = jwt.sign({user}, 'secret', { expiresIn: '20m' })
     res.cookie('token', token, {maxAge: 1000*60*20 ,httpOnly: true})
+    /*---------- SESSION CREATED ----------*/
+
     return res.redirect('/homepage')
 })
 
@@ -152,7 +197,35 @@ app.post('/register', (req, res)=>{
         gender: "NA"
     }
 
+    /*---------- FORM VALIDATION ----------*/
+    /*---------- VALIDATION PARAMETERS: 1. USER MUST ENTER USERNAME, EMAIL, AND A PASSWORD, 2. PASSWORDS SHOULD MATCH, 3. PASSWORD SHOULD BE OF ATLEAST 8 CHARACTERS AND MUST CONSTAIN A NUMBER  ----------*/
+
+    if(!newUser.name){
+        return res.send(notificationRender(false, 'Enter an username!', 'register'))
+    }
+    if(!newUser.email){
+        return res.send(notificationRender(false, 'Enter an Email!', 'register'))
+    }
+    if(!newUser.password){
+        return res.send(notificationRender(false, 'Enter a Password!', 'register'))
+    }
+    if(newUser.password != req.body.confirmpassword){
+        return res.send(notificationRender(false, 'Passwords not matching!', 'register'))
+    }
+    if(newUser.password.length < 8){
+        return res.send(notificationRender(false, 'Password must be of atleast 8 characters!', 'register'))
+    }
+    if(! /\d/.test(newUser.password)){
+        return res.send(notificationRender(false, 'Password must contain a number!', 'register'))
+    }
+
+    /*---------- FORM VALIDATION END ----------*/
+
     console.log('Register request recieved', newUser)
+
+    /*---------- CHECKING IF THE NEW USER IS ALREADY AN EXISTING USER ----------*/
+    /*---------- IF NOT AN EXISTING USER: THE DATA OF USER WILL BE SAVED IN DB AND AN EMAIL VERIFICATION LINK WILL BE SENT ----------*/
+    /*---------- IF AN EXISTING USER: THE USER WILL BE REDIRECTED TO LOGIN PAGE ----------*/
 
     pool.query(`SELECT * FROM users WHERE email = $1`, [newUser.email], (error, result)=>{
         if (error) {
@@ -160,11 +233,13 @@ app.post('/register', (req, res)=>{
         }
         else{
             if (result.rows.length > 0){
-                return res.send(notificationRender(false, 'Email already registered!', 'register'))
+                return res.send(notificationRender(false, 'Email already registered! Login to continue', 'login'))
             }
 
+            /*---------- USING THE GENERATED USER ID AS VERIFYING PARAMETER ----------*/
             const verificationToken = jwt.sign({id: newUser.id}, "hellohi", {expiresIn: '2m'})
-    
+
+            /*---------- VERIFICATION LINK ----------*/
             const url = `http://localhost:5000/account/verify/${newUser.email}/${verificationToken}`
 
             const html = `<h1>hey, ${newUser.name}</h1>
@@ -181,6 +256,7 @@ app.post('/register', (req, res)=>{
                 html: html
             }
 
+            /*---------- SENDING MAIL TO PROVIDED EMAIL ADDRESS ----------*/
             transport.sendMail(mailOptions, (err, info)=>{
                 if(err){
                     console.log(err)
@@ -200,11 +276,16 @@ app.post('/register', (req, res)=>{
             })
         }
     })
+
+    /*---------- ADDING AND SENDING VERIFICATION LINK END ----------*/
 })
 
 app.get('/account/verify/:email/:token', (req, res)=>{
     const {email, token} = req.params
-    console.log(req.params)
+    
+    /*---------- CHECKING IF THE VERIFICATION TOKEN IS VALID OR NOT ----------*/
+    /*---------- IF TOKEN INVALID: USER RECORD WILL BE DELETED AND USER MUST REGISTER AGAIN ----------*/
+    /*---------- IF TOKEN VALID: USER WILL BE SET AS VERIFIED AND REDIRECTED TO THE LOGIN PAGE TO LOGIN TO THE SITE ----------*/
     jwt.verify(token, "hellohi", (err, userDetails)=>{
         if(err){
             console.log(err)
@@ -249,6 +330,8 @@ app.get('/account/verify/:email/:token', (req, res)=>{
             })
         }
     })
+    /*---------- CHECKING VERIFICATION ENDS  ----------*/
+
     return
 })
 
@@ -267,8 +350,11 @@ app.get('/forgot-password', (req, res)=>{
 
 app.post('/forgot-password', async (req, res)=>{
 
+    /*---------- GETTING USER DETAILS USING THE EMAIL ENTERED BY USER ----------*/
     let user = await getUserByEmail(req.body.email)
 
+    /*---------- SENDING PASSWORD RESET LINK TO THE USER ----------*/
+    /*---------- THE RESET LINK CONTAINS JWT TOKEN SIGNED USING USER EMAIL ----------*/
     const verificationToken = jwt.sign({email: user.email}, "hellohi", {expiresIn: '2m'})
     
     const url = `http://localhost:5000/account/password-reset/${verificationToken}`
@@ -286,6 +372,7 @@ app.post('/forgot-password', async (req, res)=>{
         html: html
     }
 
+    /*---------- SENDING RESET LINK TO THE USER EMAIL ----------*/
     transport.sendMail(mailOptions, (err, info)=>{
         if(err){
             console.log(err)
@@ -312,6 +399,10 @@ app.post('/account/password-reset', (req, res)=>{
         userToken: req.body.userToken
     }
 
+
+    /*---------- VERIFYING THE JWT TOKEN SENT TO USER'S EMAIL ----------*/
+    /*---------- IF VERIFIED: THE USER CAN ENTER A NEW PASSWORD AND LOGIN USING SAME ----------*/
+    /*---------- IF NOT VERIFIED: USER WILL BE REDIRECTED TO THE FORGOT-PASSWORD PAGE ----------*/
     jwt.verify(newCredentials.userToken, "hellohi", (err, userDetails)=>{
         if(err){
             console.log(err)
@@ -339,7 +430,8 @@ app.post('/account/password-reset', (req, res)=>{
                     subject: 'Password Reset Request',
                     html: html
                     }
-        
+                    
+                    /*---------- SENDING A CONFIRMATION EMAIL TO THE USER AFTER SUCCESSFULL PASSWORD CHANGE ----------*/
                     transport.sendMail(mailOptions, (err, info)=>{
                     if(err){
                         console.log(err)
@@ -359,8 +451,12 @@ app.post('/account/password-reset', (req, res)=>{
 })
 
 app.get('/logout', checkAuthorization, (req, res)=>{
+
+    /*---------- CLEARING THE COOKIES TO END THE SESSION ----------*/
     res.clearCookie('token')
     req.flash('msg', 'Logged out!')
+
+    /*---------- REDIRECTING THE USER TO LOGIN PAGE AFTER LOGING OUT ----------*/
     res.redirect('/login')
 })
 
@@ -375,6 +471,10 @@ app.get('/feedback', checkAuthorization, (req, res)=>{
 
 app.get('/order-history', checkAuthorization, (req, res)=>{
     res.send(pageRender(req.user, 'order-history'))
+})
+
+app.get('/about-us', checkAuthorization, (req, res)=>{
+    res.send(pageRender(req.user, 'about-us'))
 })
 
 app.get('/settings', checkAuthorization, (req, res)=>{
