@@ -1,3 +1,5 @@
+const { pool } = require('../config/dbconfig')
+
 let message_color
 let message
 
@@ -322,6 +324,7 @@ function notificationRender(message_type, message_text, fileName, user = {  id: 
 }
 
 const pageRender = (user, page)=>{
+
     const layoutHomepage = `<!DOCTYPE html>
                             
                             <head>
@@ -413,7 +416,43 @@ const pageRender = (user, page)=>{
                                 <link rel="stylesheet" href="css/error.css" />
                                 <link rel="stylesheet" href="css/spinner.css" />
                                 </head>`
-    
+
+    const layoutLaptop = `<!DOCTYPE html>
+                        
+                        <head>
+                        <meta charset="UTF-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+                        <link rel="stylesheet" href="css/laptop.css" />
+                        
+                        <title>Laptops</title>
+                        </head>`
+
+    const layoutSmartphone = `<!DOCTYPE html>
+                        
+                        <head>
+                        <meta charset="UTF-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+                        <link rel="stylesheet" href="css/smartphone.css" />
+                        
+                        <title>Laptops</title>
+                        </head>`
+
+    const layoutStorage = `<!DOCTYPE html>
+                        
+                        <head>
+                        <meta charset="UTF-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+                        <link rel="stylesheet" href="css/storage.css" />
+                        
+                        <title>Laptops</title>
+                        </head>`
+
     if (page == 'homepage'){
 
         let sellerURL
@@ -526,7 +565,7 @@ const pageRender = (user, page)=>{
                                                                 <p>Find all newly launched laptops. Sold by most trustworthy Monk certified sellers.
                                                                 </p>
                                                                 <div class="btn__group">
-                                                                <button>View Products</button>
+                                                                <a class="prod-view-button" href="/laptop"><button>View Products</button></a>
                                                                 </div>
                                                             </div>
                                                             </div>
@@ -543,7 +582,7 @@ const pageRender = (user, page)=>{
                                                                 <p>Find all newly launched smartphones. Sold by most trustworthy Monk certified sellers.
                                                                 </p>
                                                                 <div class="btn__group">
-                                                                <button>View Products</button>
+                                                                <a class="prod-view-button" href="/laptop"><button>View Products</button></a>
                                                                 </div>
                                                             </div>
                                                             </div>
@@ -560,7 +599,7 @@ const pageRender = (user, page)=>{
                                                                 <p>Find all newly launched hardrives/pendrives/CDs. Sold by most trustworthy Monk certified sellers.
                                                                 </p>
                                                                 <div class="btn__group">
-                                                                <button>View Products</button>
+                                                                <a class="prod-view-button" href="/laptop"><button>View Products</button></a>
                                                                 </div>
                                                             </div>
                                                             </div>
@@ -1257,10 +1296,411 @@ const pageRender = (user, page)=>{
                                             `
     return sellerLogin
     }
+}
 
+const productRender ={
+    laptopRender: laptopRender,
+    smartphoneRender: smartphoneRender,
+    storageRender: storageRender
+}
+
+async function laptopRender(){
+    const layoutLaptop = `<!DOCTYPE html>
+                        
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link rel="stylesheet" href="css/laptop.css" />
+    
+    <title>Laptops</title>
+    </head>`
+    let productCart = ``
+
+    try{
+    let result = await pool.query(`SELECT * FROM products WHERE category = $1`, ['laptop'])
+    console.log(result.rows)
+    for (let i = 0; i < result.rows.length; i++) {
+        productCart += `<div class="card">
+                            <div class="wrapper">
+                            <div class="colorProd" style="background-color: #fff;"></div>
+                            <div class="imgProd" style="background-image: url(https://images-na.ssl-images-amazon.com/images/I/61pwrivrfUS._SL1500_.jpg);"></div>
+                            <div class="infoProd">
+                                <p class="nombreProd">${result.rows[i].name}</p>
+                                <p class="extraInfo">Rs. ${result.rows[i].price}/-</p>
+                                <div class="actions">
+                                <div class="preciosGrupo">
+                                    <div class="product_buttons">
+                                        <button class="btn wishlist">Buy Now</button>
+                                    </div>
+                                </div>
+                                <div class="bakuretsu_icono action aFavs">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <path d="M47 5c-6.5 0-12.9 4.2-15 10-2.1-5.8-8.5-10-15-10A15 15 0 0 0 2 20c0 13 11 26 30 39 19-13 30-26 30-39A15 15 0 0 0 47 5z">
+                                    </path>
+                                    </svg>
+                                </div>
+                                <div class="bakuretsu_icono action alCarrito">
+                                    <svg class="inCart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <title>Quitar del carrito</title>
+                                    <path d="M30 22H12M2 6h6l10 40h32l3.2-9.7"></path>
+                                    <circle cx="20" cy="54" r="4"></circle>
+                                    <circle cx="46" cy="54" r="4"></circle>
+                                    <circle cx="46" cy="22" r="16"></circle>
+                                    <path d="M53 18l-8 9-5-5"></path>
+                                    </svg>
+                                    <svg class="outCart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <title>Agregar al carrito</title>
+                                    <path d="M2 6h10l10 40h32l8-24H16"></path>
+                                    <circle cx="23" cy="54" r="4"></circle>
+                                    <circle cx="49" cy="54" r="4"></circle>
+                                    </svg>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>`
+    }
+
+    let laptop = layoutLaptop + `<body>
+                                    <header id="header" class="header">
+                                    <!-- Navigation -->
+                                    <div class="navigation">
+                                        <div class="container">
+                                        <nav class="nav__center">
+                                            <div class="nav__header">
+                                            <div class="nav__logo">
+                                            <a href="/homepage"><img src="svg/The-Monk-Store.svg"></a>
+                                            </div>
+                                                <div class="nav__hamburger">
+                                            </div>
+                                            </div>
+                                
+                                            <div class="nav__menu">
+                                            <div class="menu__top">
+                                                <div class="close__toggle">
+                                                <svg>
+                                                    <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                                                </svg>
+                                                </div>
+                                            </div>
+                                            <ul class="nav__list">
+                                                <li class="nav__item">
+                                                <a href="/laptop" class="nav__link scroll-link">Laptops</a>
+                                                </li>
+                                
+                                                <li class="nav__item">
+                                                <a href="/smartphone" class="nav__link scroll-link">Smartphones</a>
+                                                </li>
+                                
+                                                <li class="nav__item">
+                                                <a href="/storage" class="nav__link scroll-link">Storages</a>
+                                                </li>
+                                
+                                            <ul class="nav__icons">
+                                            </ul>
+                                            </div>
+                                        </nav>
+                                        </div>
+                                            
+                                <!-- upcoming Section -->
+                                    <section class="section upcoming" id="upcoming">
+                                        <div class="upcoming__container container">
+                                        <div class="title">
+                                            <h1 class="primary__title">LAPTOPS</h1>
+                                        </div>
+                                
+                                <div class="contenedorCards">
+                                    ${productCart}
+                                    <!-- Footer -->
+                                    <footer id="footer" class="section footer">
+                                        <div class="container">
+                                            <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+                                            <strong>
+                                                <a href="#">The Monk Store.Inc</a>
+                                            </strong>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        </div>
+                                    </footer>
+                                    <!-- End Footer -->
+                                    </main>
+
+                                    </body>`
+    return laptop
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+async function smartphoneRender(){
+    const layoutSmartphone = `<!DOCTYPE html>
+                        
+                        <head>
+                        <meta charset="UTF-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+                        <link rel="stylesheet" href="css/smartphone.css" />
+                        
+                        <title>Laptops</title>
+                        </head>`
+    let productCart = ``
+
+    try{
+    let result = await pool.query(`SELECT * FROM products WHERE category = $1`, ['smartphone'])
+    console.log(result.rows)
+    for (let i = 0; i < result.rows.length; i++) {
+        productCart += `  <div class="card">
+                            <div class="wrapper">
+                            <div class="colorProd"></div>
+                            <div class="imgProd" style="background-image: url(https://images-eu.ssl-images-amazon.com/images/I/31Qy4Tf82UL._SX300_SY300_QL70_FMwebp_.jpg);"></div>
+                            <div class="infoProd">
+                                <p class="nombreProd">${result.rows[i].name}</p>
+                                <p class="extraInfo">Rs. ${result.rows[i].price}/-</p>
+                                <div class="actions">
+                                <div class="preciosGrupo">
+                                    <div class="product_buttons">
+                                        <button class="btn wishlist">Buy Now</button>
+                                    </div>
+                                </div>
+                                <div class="icono action aFavs">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <path d="M47 5c-6.5 0-12.9 4.2-15 10-2.1-5.8-8.5-10-15-10A15 15 0 0 0 2 20c0 13 11 26 30 39 19-13 30-26 30-39A15 15 0 0 0 47 5z">
+                                    </path>
+                                    </svg>
+                                </div>
+                                <div class="icono action alCarrito">
+                                    <svg class="inCart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <title>Quitar del carrito</title>
+                                    <path d="M30 22H12M2 6h6l10 40h32l3.2-9.7"></path>
+                                    <circle cx="20" cy="54" r="4"></circle>
+                                    <circle cx="46" cy="54" r="4"></circle>
+                                    <circle cx="46" cy="22" r="16"></circle>
+                                    <path d="M53 18l-8 9-5-5"></path>
+                                    </svg>
+                                    <svg class="outCart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <title>Agregar al carrito</title>
+                                    <path d="M2 6h10l10 40h32l8-24H16"></path>
+                                    <circle cx="23" cy="54" r="4"></circle>
+                                    <circle cx="49" cy="54" r="4"></circle>
+                                    </svg>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>`
+    }
+
+    let smartphone = layoutSmartphone + `<body>
+                                            <header id="header" class="header">
+                                            <!-- Navigation -->
+                                            <div class="navigation">
+                                                <div class="container">
+                                                <nav class="nav__center">
+                                                    <div class="nav__header">
+                                                    <div class="nav__logo">
+                                                    <a href="/homepage"><img src="svg/The-Monk-Store.svg"></a>
+                                                    </div>
+                                                        <div class="nav__hamburger">
+                                                    </div>
+                                                    </div>
+                                        
+                                                    <div class="nav__menu">
+                                                    <div class="menu__top">
+                                                        <div class="close__toggle">
+                                                        <svg>
+                                                            <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                                                        </svg>
+                                                        </div>
+                                                    </div>
+                                                    <ul class="nav__list">
+                                                        <li class="nav__item">
+                                                        <a href="/laptop" class="nav__link scroll-link">Laptops</a>
+                                                        </li>
+                                        
+                                                        <li class="nav__item">
+                                                        <a href="/smartphone" class="nav__link scroll-link">Smartphones</a>
+                                                        </li>
+                                        
+                                                        <li class="nav__item">
+                                                        <a href="/storage" class="nav__link scroll-link">Storages</a>
+                                                        </li>
+                                        
+                                                    <ul class="nav__icons">
+                                                    </ul>
+                                                    </div>
+                                                </nav>
+                                                </div>
+                                                    
+                                        <!-- upcoming Section -->
+                                            <section class="section upcoming" id="upcoming">
+                                                <div class="upcoming__container container">
+                                                <div class="title">
+                                                    <h1 class="primary__title">SMARTPHONES</h1>
+                                                </div>
+                                        
+                                        <div class="contenedorCards">  
+                                            ${productCart}
+                                            <!-- Footer -->
+                                            <footer id="footer" class="section footer">
+                                                <div class="container">
+                                                    <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+                                                    <strong>
+                                                        <a href="#">The Monk Store.Inc</a>
+                                                    </strong>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                </div>
+                                            </footer>
+                                            <!-- End Footer -->
+                                            </main>
+                                        </body>`
+    return smartphone
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+async function storageRender(){
+    const layoutStorage = `<!DOCTYPE html>
+                        
+                        <head>
+                        <meta charset="UTF-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+                        <link rel="stylesheet" href="css/storage.css" />
+                        
+                        <title>Laptops</title>
+                        </head>`
+
+    let productCart = ``
+
+    try{
+    let result = await pool.query(`SELECT * FROM products WHERE category = $1`, ['storage'])
+    console.log(result.rows)
+    for (let i = 0; i < result.rows.length; i++) {
+        productCart += `  <div class="card">
+                            <div class="wrapper">
+                            <div class="colorProd"></div>
+                            <div class="imgProd" style="background-image: url(https://images-eu.ssl-images-amazon.com/images/I/41RbYlMPpBL._SX300_SY300_QL70_FMwebp_.jpg);"></div>
+                            <div class="infoProd">
+                                <p class="nombreProd">${result.rows[i].name}</p>
+                                <p class="extraInfo">Rs. ${result.rows[i].price}/-</p>
+                                <div class="actions">
+                                <div class="preciosGrupo">
+                                    <div class="product_buttons">
+                                        <button class="btn wishlist">Buy Now</button>
+                                    </div>
+                                </div>
+                                <div class="icono action aFavs">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <path d="M47 5c-6.5 0-12.9 4.2-15 10-2.1-5.8-8.5-10-15-10A15 15 0 0 0 2 20c0 13 11 26 30 39 19-13 30-26 30-39A15 15 0 0 0 47 5z">
+                                    </path>
+                                    </svg>
+                                </div>
+                                <div class="icono action alCarrito">
+                                    <svg class="inCart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <title>Quitar del carrito</title>
+                                    <path d="M30 22H12M2 6h6l10 40h32l3.2-9.7"></path>
+                                    <circle cx="20" cy="54" r="4"></circle>
+                                    <circle cx="46" cy="54" r="4"></circle>
+                                    <circle cx="46" cy="22" r="16"></circle>
+                                    <path d="M53 18l-8 9-5-5"></path>
+                                    </svg>
+                                    <svg class="outCart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <title>Agregar al carrito</title>
+                                    <path d="M2 6h10l10 40h32l8-24H16"></path>
+                                    <circle cx="23" cy="54" r="4"></circle>
+                                    <circle cx="49" cy="54" r="4"></circle>
+                                    </svg>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>`
+    }
+
+    let storage = layoutStorage + `<body>
+                                            <header id="header" class="header">
+                                            <!-- Navigation -->
+                                            <div class="navigation">
+                                                <div class="container">
+                                                <nav class="nav__center">
+                                                    <div class="nav__header">
+                                                    <div class="nav__logo">
+                                                    <a href="/homepage"><img src="svg/The-Monk-Store.svg"></a>
+                                                    </div>
+                                                        <div class="nav__hamburger">
+                                                    </div>
+                                                    </div>
+                                        
+                                                    <div class="nav__menu">
+                                                    <div class="menu__top">
+                                                        <div class="close__toggle">
+                                                        <svg>
+                                                            <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                                                        </svg>
+                                                        </div>
+                                                    </div>
+                                                    <ul class="nav__list">
+                                                        <li class="nav__item">
+                                                        <a href="/laptop" class="nav__link scroll-link">Laptops</a>
+                                                        </li>
+                                        
+                                                        <li class="nav__item">
+                                                        <a href="/smartphone" class="nav__link scroll-link">Smartphones</a>
+                                                        </li>
+                                        
+                                                        <li class="nav__item">
+                                                        <a href="/storage" class="nav__link scroll-link">Storages</a>
+                                                        </li>
+                                        
+                                                    <ul class="nav__icons">
+                                                    </ul>
+                                                    </div>
+                                                </nav>
+                                                </div>
+                                                    
+                                        <!-- upcoming Section -->
+                                            <section class="section upcoming" id="upcoming">
+                                                <div class="upcoming__container container">
+                                                <div class="title">
+                                                    <h1 class="primary__title">SMARTPHONES</h1>
+                                                </div>
+                                        
+                                        <div class="contenedorCards">  
+                                            ${productCart}
+                                            <!-- Footer -->
+                                            <footer id="footer" class="section footer">
+                                                <div class="container">
+                                                    <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+                                                    <strong>
+                                                        <a href="#">The Monk Store.Inc</a>
+                                                    </strong>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                </div>
+                                            </footer>
+                                            <!-- End Footer -->
+                                            </main>
+                                        </body>`
+    return storage
+    }
+    catch(err){
+        console.log(err)
+    }
 }
 
 module.exports = {
     notificationRender, 
-    pageRender
+    pageRender,
+    productRender
 }

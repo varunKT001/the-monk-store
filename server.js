@@ -1,3 +1,5 @@
+
+/*---------- LOADING ENVIRONMENT VARIABLES ----------*/
 require('dotenv').config()
 
 const PORT = process.env.PORT || 5000
@@ -10,7 +12,7 @@ const PASS = process.env.PASS
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /*---------- CUSTOM RENDER FUNCTIONS ----------*/
-const {notificationRender, pageRender} = require('./misc/files')
+const {notificationRender, pageRender, productRender} = require('./misc/files')
 
 /*---------- GLOBAL PATH MODULE TO RESOLVE PATHS ----------*/
 const path = require('path')
@@ -26,7 +28,7 @@ const session = require('express-session')
 const jwt = require('jsonwebtoken')
 
 /*---------- USIGN NODEMAILER TO SEND EMAILS ----------*/
-const { transport } = require('./config/nodemailerConfig')
+const { transport } = require('./config/nodemailerConfig') 
 
 /*---------- REQUIRING POOL USING DBCONFIG TO CONNECT TO DB AND MAKE QUERIES ----------*/
 const { pool } = require('./config/dbconfig')
@@ -44,7 +46,7 @@ app.use(cookieParser())
 app.use(express.static('./static'))
 app.use(express.urlencoded({extended: false}))
 
-/*---------- SETTING UP EXPRESS SESSIONS ----------*/
+/*---------- SETTING UP EXPRESS SESSIONS MIDDLEWARE ----------*/
 app.use(session({
     secret: 'bhothard',
     resave: false,
@@ -54,7 +56,7 @@ app.use(session({
     }
 }))
 
-/*---------- USING FLASH ----------*/
+/*---------- USING FLASH MIDDLEWARE ----------*/
 app.use(flash())
 
 /*---------- CUSTOM MIDDLEWARE: FOR CHECKING IF THE USER IS AUTHORIZED OR NOT ----------*/
@@ -94,6 +96,12 @@ const checkSeller = (req, res, next)=>{
         return res.redirect('/login')
     }
 }
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|  H E L P E R - F U N C T I O N S  |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 
 /*---------- CUSTOM HELPER FUNCTIONS:  ----------*/
 
@@ -596,6 +604,21 @@ app.post('/seller-login', async (req, res)=>{
 app.get('/seller', [checkAuthorization, checkSeller, (req, res)=>{
     res.send(`hello, ${req.user.name}. Welcome to seller homepage.`)
 }])
+
+app.get('/laptop', checkAuthorization, async (req, res)=>{
+    let laptop = await productRender.laptopRender()
+    res.send(laptop)
+})
+
+app.get('/smartphone', checkAuthorization, async (req, res)=>{
+    let smartphone = await productRender.smartphoneRender()
+    res.send(smartphone)
+})
+
+app.get('/storage', checkAuthorization, async (req, res)=>{
+    let storage = await productRender.storageRender()
+    res.send(storage)
+})
 
 app.listen(PORT, ()=>{
     console.log(`Listening on port ${PORT}`)

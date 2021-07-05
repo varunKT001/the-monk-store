@@ -1231,6 +1231,11 @@ h4 {
   text-align: center;
 }
 
+.prod-view-button{
+  text-decoration: none;
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 998px) {
   .footer__top {
     grid-template-columns: repeat(2, 1fr);
