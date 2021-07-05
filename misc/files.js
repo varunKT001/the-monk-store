@@ -8,7 +8,15 @@ let spinner = `<div class="spinner">
 
 let loaderCSS = "/css/spinner.css"
 
-function notificationRender(message_type, message_text, fileName) {
+function notificationRender(message_type, message_text, fileName, user = {  id: 'Date.now().toString()',
+                                                                            name: 'USER',
+                                                                            email: 'user@email.com',
+                                                                            password: '',
+                                                                            verified: false,
+                                                                            seller: false,
+                                                                            phoneNumber: '', 
+                                                                            address: "NA",
+                                                                            gender: "NA"}) {
     const layout = `<head>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                     <meta charset="utf-8" />
@@ -60,7 +68,7 @@ function notificationRender(message_type, message_text, fileName) {
                         <h1 class="form__title">Login</h1>
                         <div class="form__message form__message--error"></div>
                         <div class="form__input-group">
-                            <input type="text" class="form__input" autofocus placeholder="Username" name="name" />
+                            <input type="text" class="form__input" autofocus placeholder="email" name="email" />
                             <div class="form__input-error-message"></div>
                         </div>
                         <div class="form__input-group">
@@ -82,8 +90,7 @@ function notificationRender(message_type, message_text, fileName) {
         return login
     }
     else if (fileName == 'register') {
-        let register = layout + `<!DOCTYPE html>                        
-                                    <body>
+        let register = layout + `<body>
                                     <div class="notification" style="background-color: ${message_color};">${message}</div>
                                     <script>
                                     let div = document.getElementsByClassName('notification')[0]
@@ -231,6 +238,87 @@ function notificationRender(message_type, message_text, fileName) {
                                         </body>`
     return settings
     }
+    if (fileName == 'seller-login'){
+        let sellerLogin = layout + `<body>
+                                        <div class="notification" style="background-color: ${message_color};">${message}</div>
+                                        <script>
+                                        let div = document.getElementsByClassName('notification')[0]
+                                        setTimeout(() => {
+                                            div.style.animation = "slideBackToTop 250ms ease-in"
+                                            setTimeout(() => {
+                                            div.style["background-color"] = ""
+                                            div.style.color = "#ffffff"
+                                            setTimeout(() => {
+                                                div.remove()
+                                            }, 100);
+                                            }, 250);
+                                        }, 5000);
+                                        </script>
+                                        <div class="container">
+                                            <form class="form" id="login" method="POST" action="/seller-login">
+                                            <img class="brand-logo" src="icons/3.png" alt="" />
+                                            <h1 class="form__title">Seller Login</h1>
+                                            <div class="form__message form__message--error"></div>
+                                            <div class="form__input-group">
+                                                <input
+                                                type="text"
+                                                class="form__input"
+                                                autofocus
+                                                placeholder="Username"
+                                                name="name"
+                                                />
+                                                <div class="form__input-error-message"></div>
+                                            </div>
+                                            <div class="form__input-group">
+                                                <input
+                                                type="password"
+                                                class="form__input"
+                                                autofocus
+                                                placeholder="Password"
+                                                name="password"
+                                                />
+                                                <div class="form__input-error-message"></div>
+                                            </div>
+                                            <div class="form__input-group">
+                                                <input
+                                                type="hidden"
+                                                class="form__input"
+                                                autofocus
+                                                placeholder="Password"
+                                                name="userToken"
+                                                value="${user.email}"
+                                                />
+                                                <div class="form__input-error-message"></div>
+                                            </div>
+                                            <div class="form__input-group">
+                                            <input
+                                              type="checkbox"
+                                              class="form__input checkbox"
+                                              autofocus
+                                              placeholder="Password"
+                                              name="userToken"
+                                              checked
+                                              required
+                                              oninvalid="this.setCustomValidity('Accept the terms and conditions to continue')"
+                                              oninput="this.setCustomValidity('')"
+                                              />
+                                              <div class="checkbox"> I agree to accept the terms and conditions</div>
+                                            <div class="form__input-error-message"></div>
+                                          </div>
+                                            <button class="form__button" type="submit">Continue</button>
+                                            <p class="form__text">
+                                                <a href="/forgot-password" class="form__link">Forgot your password?</a>
+                                            </p>
+                                            </form>
+                                        </div>
+                                        <div class="spinner">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <script src="js/spinner.js"></script>
+                                        </body>
+                                        `
+    return sellerLogin
+    }
 }
 
 const pageRender = (user, page)=>{
@@ -310,16 +398,32 @@ const pageRender = (user, page)=>{
                             <link rel='stylesheet' href='https://rsms.me/inter/inter.css'>
                             <link rel="stylesheet" href="css/about-us.css">
                             </head>`
+
+    const layoutSellerLogin = `<!DOCTYPE html>
+                                <head>
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                                <meta charset="utf-8" />
+                                <title>Seller Login</title>
+                                <link rel="preconnect" href="https://fonts.gstatic.com" />
+                                <link
+                                    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap"
+                                    rel="stylesheet"
+                                />
+                                <link rel="stylesheet" href="css/authentication.css" />
+                                <link rel="stylesheet" href="css/error.css" />
+                                <link rel="stylesheet" href="css/spinner.css" />
+                                </head>`
     
     if (page == 'homepage'){
 
         let sellerURL
         let sellerString
-        if(user.seller = 'false'){
+
+        if(user.seller == 'false'){
             sellerString = `BECOME A SELLER`
             sellerURL = "/seller-login"
         }
-        else{
+        else if (user.seller == 'true'){
             sellerString = `SELLER PROFILE`
             sellerURL = "/seller"
         }
@@ -1084,6 +1188,74 @@ const pageRender = (user, page)=>{
                             </body>`
     
     return aboutUs
+    }
+
+    if (page == 'seller-login'){
+        let sellerLogin = layoutSellerLogin + `<body>
+                                                <div class="container">
+                                                <form class="form" id="login" method="POST" action="/seller-login">
+                                                    <img class="brand-logo" src="icons/3.png" alt="" />
+                                                    <h1 class="form__title">Seller Login</h1>
+                                                    <div class="form__message form__message--error"></div>
+                                                    <div class="form__input-group">
+                                                    <input
+                                                        type="text"
+                                                        class="form__input"
+                                                        autofocus
+                                                        placeholder="Username"
+                                                        name="name"
+                                                    />
+                                                    <div class="form__input-error-message"></div>
+                                                    </div>
+                                                    <div class="form__input-group">
+                                                    <input
+                                                        type="password"
+                                                        class="form__input"
+                                                        autofocus
+                                                        placeholder="Password"
+                                                        name="password"
+                                                    />
+                                                    <div class="form__input-error-message"></div>
+                                                    </div>
+                                                    <div class="form__input-group">
+                                                    <input
+                                                        type="hidden"
+                                                        class="form__input"
+                                                        autofocus
+                                                        placeholder="Password"
+                                                        name="emailToken"
+                                                        value="${user.email}"
+                                                    />
+                                                    <div class="form__input-error-message"></div>
+                                                    </div>
+                                                    <div class="form__input-group">
+                                                    <input
+                                                      type="checkbox"
+                                                      class="form__input checkbox"
+                                                      autofocus
+                                                      placeholder="Password"
+                                                      name="userToken"
+                                                      checked
+                                                      required
+                                                      oninvalid="this.setCustomValidity('Accept the terms and conditions to continue')"
+                                                      oninput="this.setCustomValidity('')"
+                                                      />
+                                                      <div class="checkbox"> I agree to accept the terms and conditions</div>
+                                                    <div class="form__input-error-message"></div>
+                                                  </div>
+                                                    <button class="form__button" type="submit">Continue</button>
+                                                    <p class="form__text">
+                                                    <a href="/forgot-password" class="form__link">Forgot your password?</a>
+                                                    </p>
+                                                </form>
+                                                </div>
+                                                <div class="spinner">
+                                                <div class="circle"></div>
+                                                </div>
+                                                <script src="js/spinner.js"></script>
+                                            </body>
+                                            `
+    return sellerLogin
     }
 
 }

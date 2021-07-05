@@ -5,9 +5,9 @@ const PORT = process.env.PORT || 5000
 const EMAIL = process.env.EMAIL
 const PASS = process.env.PASS
 
-
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  P A C K A G E S  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|  P A C K A G E S  |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*----------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /*---------- CUSTOM RENDER FUNCTIONS ----------*/
 const {notificationRender, pageRender} = require('./misc/files')
@@ -35,9 +35,9 @@ const { pool } = require('./config/dbconfig')
 const express = require('express')
 const app = express()
 
-
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  M I D D L E - W A R E S  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|  M I D D L E - W A R E S  |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 /*---------- USING SOME NECESSARY MIDDLEWARES ----------*/
 app.use(cookieParser())
@@ -80,6 +80,21 @@ const checkAuthorization = (req, res, next)=>{
     }
 }
 
+/*---------- CUSTOM MIDDLEWARE: FOR CHECKING IF USER IS A SELLER OR NOT ----------*/
+/*---------- IT USES THE user FIELD SET BY THE checkAuthorization() MIDDLEWARE TO CHECK THE SELLER FIELD OF USER ----------*/
+/*---------- IF USER IS A SELLER: IT CALLS THE NEXT MIDDLEWARE ----------*/
+/*---------- IF USER IS NOT A SELLER: REDIRECTS TO LOGIN PAGE ----------*/
+const checkSeller = (req, res, next)=>{
+    if (req.user.seller == 'true'){
+        /*---------- PREVENTING ANY CACHING DONE BY THE BROWSER ----------*/
+        res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, post-check=0, pre-check=0')
+        return next()
+    }
+    else if (req.user.seller == 'false'){
+        return res.redirect('/login')
+    }
+}
+
 /*---------- CUSTOM HELPER FUNCTIONS:  ----------*/
 
 /*---------- RETURNS A USER USING THE USERNAME ----------*/
@@ -115,8 +130,9 @@ const getUserByEmail = async (email)=>{
     }
 }
 
-
-/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  R O U T E S  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|  R O U T E S  |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
 app.get('/', checkAuthorization, (req, res)=>{
@@ -138,12 +154,12 @@ app.get('/login', (req, res)=>{
 
 app.post('/login', async (req, res)=>{
     const newUser = {
-        name: req.body.name,
+        email: req.body.email,
         password: req.body.password,
     }
     console.log('login request recieved', newUser)
 
-    const user = await getUserByUsername(newUser.name)
+    const user = await getUserByEmail(newUser.email)
 
     /*---------- CHECKING IF THE CREDENTIALS ENTERED ARE CORRECT OR NOT ----------*/
     if(!user){
@@ -490,6 +506,96 @@ app.get('/settings', checkAuthorization, (req, res)=>{
         return res.send(pageRender(user, 'settings'))
     }
 })
+
+app.get('/seller-login', checkAuthorization, (req, res)=>{
+    const message = req.flash()
+    console.log(req.user)
+    if(message.msg){
+        return res.send(notificationRender(true, message.msg, 'seller-login', req.user))
+    }
+    if(message.emsg){
+        return res.send(notificationRender(false, message.emsg, 'seller-login', req.user))
+    }
+    else{
+        return res.send(pageRender(req.user, 'seller-login'))
+    }
+})
+
+app.post('/seller-login', async (req, res)=>{
+    const reqUser = {
+        name: req.body.name,
+        password: req.body.password,
+        userToken: req.body.emailToken
+    }
+
+    console.log('seller-login request recieved', reqUser)
+
+    /*---------- FINDING USER ----------*/
+    const user = await getUserByEmail(reqUser.userToken)
+
+    /*---------- CHECKING IF THE CREDENTIALS ENTERED ARE CORRECT OR NOT ----------*/
+    if(user.name != reqUser.name){
+        return res.send(notificationRender(false, 'User not found!', 'seller-login'))
+    }
+    if(!(user.password == reqUser.password)){
+        return res.send(notificationRender(false, 'Password incorrect!', 'seller-login'))
+    }
+    /*---------- CHECKING CREDENTIALS END ----------*/
+
+    /*---------- UPDATING THE SELLER STATUS FROM FALSE TO TRUE ----------*/
+    /*---------- AFTER UPDATING: SENT A WELCOME MAIL TO USER FOR BECOMING A SELLER ----------*/
+    pool.query(`UPDATE users SET seller = $1 WHERE id = $2`, ['true', user.id], (err, result)=>{
+        if (err){
+            console.log(err)
+        }
+        else{
+            const html = `<h1>hey, ${reqUser.name}</h1>
+                        <h3>Welcome to Monk store</h3>
+                        <p>Thank you for becoming a seller.</p>`
+
+            const mailOptions = {
+                from: `"The Monk Store" <${EMAIL}>`,
+                to: user.email,
+                subject: 'Welcome to Monk Store',
+                html: html
+            }
+
+            /*---------- SENDING MAIL TO USER EMAIL ADDRESS ----------*/
+            transport.sendMail(mailOptions, (err, info)=>{
+                if(err){
+                    console.log(err)
+                    req.flash('emsg', 'Something went wrong!')
+                    return res.redirect('/seller-login')
+                }
+                else{
+                    console.log('mail sent')
+
+                    pool.query(`SELECT * FROM users WHERE id = $1`, [user.id], (err, USER)=>{
+                        if(err){
+                            console.log(err)
+                        }
+                        else{
+
+                        /*---------- CREATING A NEW USER+SELLER SESSION USING JWT VIA UPDATING THE COOKIES ----------*/
+                        /*---------- SESSIONS LAST FOR ABOUT 20 MINUTES ----------*/
+                        const user = USER.rows[0]
+                        const token = jwt.sign({user}, 'secret', { expiresIn: '20m' })
+                        res.cookie('token', token, {maxAge: 1000*60*20 ,httpOnly: true})
+                        /*---------- SESSION CREATED ----------*/
+
+                        return res.redirect('/seller')
+                        }
+                    })
+                }
+            })
+        }
+    })
+
+})
+
+app.get('/seller', [checkAuthorization, checkSeller, (req, res)=>{
+    res.send(`hello, ${req.user.name}. Welcome to seller homepage.`)
+}])
 
 app.listen(PORT, ()=>{
     console.log(`Listening on port ${PORT}`)

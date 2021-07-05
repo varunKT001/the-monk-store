@@ -1,9 +1,15 @@
 const { Pool } = require('pg')
 
-const connectionString = `postgresql://${process.env.DBUSER}:${process.env.DBPASSWORD}@${process.env.DBHOST}:${process.env.DBPORT}/the_monk_store`
+const isDevelopment = process.env.NODE_ENV ? true:false
+console.log(isDevelopment)
+
+const connectionString = isDevelopment ? `postgresql://${process.env.DBUSER}:${process.env.DBPASSWORD}@${process.env.DBHOST}:${process.env.DBPORT}/the_monk_store` : process.env.DATABASE_URL
+const sslVal = isDevelopment ? false : true
+console.log(sslVal)
 
 const pool = new Pool({
-    connectionString: connectionString
+    connectionString: connectionString,
+    ssl: sslVal
 })
 
 module.exports = { pool }

@@ -105,3 +105,8 @@ body::before{
     text-decoration: none;
     cursor: pointer;
 }
+
+.checkbox{
+    width: auto;
+    display: inline;
+}
