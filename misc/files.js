@@ -370,7 +370,7 @@ function notificationRender(message_type, message_text, fileName, userEmail = 'u
                                                 <nav class="nav__center">
                                                     <div class="nav__header">
                                                     <div class="nav__logo">
-                                                    <img src="svg/The-Monk-Store.svg">
+                                                    <img src="svg/The-Monk-store.svg">
                                                     </div>
                                         
                                                     <div class="nav__hamburger">
@@ -864,7 +864,7 @@ const pageRender = (user, page)=>{
                                                 <nav class="nav__center">
                                                     <div class="nav__header">
                                                     <div class="nav__logo">
-                                                    <img src="svg/The-Monk-Store.svg">
+                                                    <img src="svg/The-Monk-store.svg">
                                                     </div>
                                         
                                                     <div class="nav__hamburger">
@@ -1749,7 +1749,7 @@ async function laptopRender(){
                                         <nav class="nav__center">
                                             <div class="nav__header">
                                             <div class="nav__logo">
-                                            <a href="/homepage"><img src="svg/The-Monk-Store.svg"></a>
+                                            <a href="/homepage"><img src="svg/The-Monk-store.svg"></a>
                                             </div>
                                                 <div class="nav__hamburger">
                                             </div>
@@ -1885,7 +1885,7 @@ async function smartphoneRender(){
                                                 <nav class="nav__center">
                                                     <div class="nav__header">
                                                     <div class="nav__logo">
-                                                    <a href="/homepage"><img src="svg/The-Monk-Store.svg"></a>
+                                                    <a href="/homepage"><img src="svg/The-Monk-store.svg"></a>
                                                     </div>
                                                         <div class="nav__hamburger">
                                                     </div>
@@ -2021,7 +2021,7 @@ async function storageRender(){
                                                 <nav class="nav__center">
                                                     <div class="nav__header">
                                                     <div class="nav__logo">
-                                                    <a href="/homepage"><img src="svg/The-Monk-Store.svg"></a>
+                                                    <a href="/homepage"><img src="svg/The-Monk-store.svg"></a>
                                                     </div>
                                                         <div class="nav__hamburger">
                                                     </div>
@@ -2267,7 +2267,7 @@ async function productView(message_type, message_text, user, product){
                                 <nav class="nav__center">
                                     <div class="nav__header">
                                     <div class="nav__logo">
-                                    <a href="/homepage"><img src="svg/The-Monk-Store.svg"></a>
+                                    <a href="/homepage"><img src="svg/The-Monk-store.svg"></a>
                                     </div>
                                         <div class="nav__hamburger">
                                         <span>
