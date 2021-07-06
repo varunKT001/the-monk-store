@@ -1099,70 +1099,41 @@ h4 {
 
 
 /* ============ feedback ============= */
-.feedback{
-  background: #d3d3d3;
-  padding: 1px;
-  position: relative;
+.feedback {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
-.form,
-.form-items{
+.feedback__center {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 0 2rem;
+  padding: 2rem 0;
+}
+
+.feedback__box form {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-content: center;
   justify-content: center;
   align-items: center;
-  padding: 0px 10px;
 }
 
-.form-items .input{
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 15px 40px;
-  box-sizing: border-box;
-  background: #ebeef1;
-  border: 0px;
+.feedback__box form input {
+  width: 70%;
+  padding: 1.5rem 0;
+  text-indent: 1rem;
+  border: 1px solid var(--dark-color-alt);
+}
+
+.feedback__box form button {
+  padding: 1.5rem 3rem;
+  background-color: var(--default-color);
+  border: 1px solid var(--default-color);
+  color: var(--white);
+  margin-left: -2rem;
+}
+
+.feedback__box form button:focus {
   outline: none;
-  border-radius: 30px;
-}
-
-.form-items .input.message{
-  height: 125px;
-  border-radius: 15px;
-  margin-bottom: 30px;
-  padding: 15px 15px;
-  font-family: poppins, sans-serif;
-}
-
-.btn{
-  position: relative;
-  width: 50%;
-  background: #827ffe;
-  font-weight: bold;
-  font-size: 1.6rem;
-  text-align: center;
-  color: #fff;
-  padding: 12px;
-  border-radius: 3px;
-  cursor: pointer;
-  margin: 0px 12px 24px 12px;
-}
-
-.btn .fas{
-  margin-left: 10px;
-  font-size: 12px;
-}
-
-.form-items{
-  position: relative;
-}
-
-.form-items .fas{
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  color: #9a99aa;
 }
 
 @media only screen and (max-width: 992px) {
@@ -1258,6 +1229,11 @@ h4 {
   left: 0;
   padding: 1rem;
   text-align: center;
+}
+
+.prod-view-button{
+  text-decoration: none;
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 998px) {

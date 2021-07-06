@@ -1,3 +1,4 @@
+const { load } = require('dotenv')
 const { pool } = require('../config/dbconfig')
 
 let message_color
@@ -7,6 +8,10 @@ let spinner = `<div class="spinner">
                 <div class="circle"></div>
                 </div>
                 <script src="/js/spinner.js"></script>`
+let homepageSpinner = `<div class="spinner">
+                        <div class="circle"></div>
+                        </div>
+                        <script src="/js/homepage-spinner.js"></script>`
 
 let loaderCSS = "/css/spinner.css"
 
@@ -36,6 +41,19 @@ function notificationRender(message_type, message_text, fileName, user = {  id: 
                             <title>Settings</title>
                             <link rel="stylesheet" href="css/settings.css">
                             <link rel="stylesheet" href="css/footer.css">
+                            </head>`
+
+    const layoutHomepage = `<!DOCTYPE html>
+    
+                            <head>
+                            <meta charset="UTF-8" />
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                            <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                            <link rel="stylesheet" href="css/homepage.css" />
+                            <link rel="stylesheet" href="css/homepage-error.css" />
+                            <link rel="stylesheet" href=css/homepage-spinner.css />
+                            
+                            <title>Home-Page</title>
                             </head>`
 
     if (message_type) {
@@ -321,6 +339,384 @@ function notificationRender(message_type, message_text, fileName, user = {  id: 
                                         `
     return sellerLogin
     }
+
+    if (fileName == 'homepage'){
+
+        let sellerURL
+        let sellerString
+
+        if(user.seller == 'false'){
+            sellerString = `BECOME A SELLER`
+            sellerURL = "/seller-login"
+        }
+        else if (user.seller == 'true'){
+            sellerString = `SELLER PROFILE`
+            sellerURL = "/seller"
+        }
+
+        let homepage = layoutHomepage + `<body>
+                                            <div class="notification">
+                                            <div class="notification-container" style="background-color: ${message_color};">${message}</div>
+                                            </div>
+                                            <script>
+                                            let div = document.getElementsByClassName('notification')[0]
+                                            setTimeout(() => {
+                                                div.style.animation = "slideBackToTop 250ms ease-in"
+                                                setTimeout(() => {
+                                                div.style["background-color"] = ""
+                                                div.style.color = "transparent"
+                                                setTimeout(() => {
+                                                    div.remove()
+                                                }, 100);
+                                                }, 250);
+                                            }, 5000);
+                                            </script>
+                                            <header id="header" class="header">
+                                            <!-- Navigation -->
+                                            <div class="navigation">
+                                                <div class="container">
+                                                <nav class="nav__center">
+                                                    <div class="nav__header">
+                                                    <div class="nav__logo">
+                                                    <img src="svg/The-Monk-Store.svg">
+                                                    </div>
+                                        
+                                                    <div class="nav__hamburger">
+                                                        <span>
+                                                        <svg>
+                                                            <use xlink:href="./images/sprite.svg#icon-menu"></use>
+                                                        </svg>
+                                                        </span>
+                                                    </div>
+                                                    </div>
+                                        
+                                                    <div class="nav__menu">
+                                                    <div class="menu__top">
+                                                        <h1 class="nav__category">Monk<span>Store</span></h1>
+                                                        <div class="close__toggle">
+                                                        <svg>
+                                                            <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                                                        </svg>
+                                                        </div>
+                                                    </div>
+                                                    <ul class="nav__list">
+                                                        <li class="nav__item">
+                                                        <a href="#header" class="nav__link scroll-link">Home</a>
+                                                        </li>
+                                        
+                                                        <li class="nav__item">
+                                                        <a href="/settings" class="nav__link scroll-link">Settings</a>
+                                                        </li>
+                                        
+                                                        <li class="nav__item">
+                                                        <a href="order-history" class="nav__link scroll-link">Order History</a>
+                                                        </li>
+                                        
+                                                        <li class="nav__item">
+                                                        <a href="#feedback" class="nav__link scroll-link">Add Cart</a>
+                                                        </li>
+                                        
+                                                        <li class="nav__item">
+                                                        <a href=${sellerURL} class="nav__link">${sellerString}</a>
+                                                        </li>
+                                        
+                                                        <li class="nav__item">
+                                                        <a href="/logout" class="nav__link">Log Out</a>
+                                                        </li>
+                                                    </ul>
+                                        
+                                                    <ul class="nav__icons">
+                                                        <a href="#" class="icon__item">
+                                                        <svg>
+                                                            <use xlink:href="./images/sprite.svg#icon-shopping-basket"></use>
+                                                        </svg>
+                                                        <span>2</span>
+                                                        </a>
+                                                    </ul>
+                                                    </div>
+                                                </nav>
+                                                </div>
+                                            </div>
+                                        
+                                            <!-- Hero -->
+                                            <div class="hero">
+                                                <div class="hero__content container">
+                                                <a href="#" class="btn-hero">Welcome to Monk Store</a>
+                                                </div>
+                                        
+                                                <a href="#new__arrival" class="goto__next scroll-link">
+                                                </a>
+                                            </div>
+                                            </header>
+                                            <main>
+                                            
+                                            
+                                            <!-- Cart Slide -->
+                                            <section class="cart__slide">
+                                                <div class="arrival__slide container">
+                                                <div class="glide" id="glide1">
+                                                    <div class="glide__track" data-glide-el="track">
+                                                    <ul class="glide__slides">
+                                                        <li class="glide__slide">
+                                                        <div class="arrival">
+                                                            <div class="cart__like">
+                                                            <div class="image__holder">
+                                                                <img src="https://m.media-amazon.com/images/I/71WbatK7HVL._AC_UY327_FMwebp_QL65_.jpg" alt="" />
+                                                            </div>
+                                                            <div class="cart__details">
+                                                                <h1>Laptops</h1>
+                                                                <p>Find all newly launched laptops. Sold by most trustworthy Monk certified sellers.
+                                                                </p>
+                                                                <div class="btn__group">
+                                                                <a class="prod-view-button" href="/laptop"><button>View Products</button></a>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        </li>
+                                                        <li class="glide__slide">
+                                                        <div class="arrival">
+                                                            <div class="cart__like">
+                                                            <div class="image__holder">
+                                                                <img src="https://m.media-amazon.com/images/I/71A9Vo1BatL._AC_UY327_FMwebp_QL65_.jpg" alt="" />
+                                                            </div>
+                                                            <div class="cart__details">
+                                                                <h1>Smartphones</h1>
+                                                                <p>Find all newly launched smartphones. Sold by most trustworthy Monk certified sellers.
+                                                                </p>
+                                                                <div class="btn__group">
+                                                                <a class="prod-view-button" href="/smartphone"><button>View Products</button></a>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        </li>
+                                                        <li class="glide__slide">
+                                                        <div class="arrival">
+                                                            <div class="cart__like">
+                                                            <div class="image__holder">
+                                                                <img src="https://m.media-amazon.com/images/I/71p2W9Ykh7L._AC_UY327_FMwebp_QL65_.jpg" alt="" />
+                                                            </div>
+                                                            <div class="cart__details">
+                                                                <h1>Storages</h1>
+                                                                <p>Find all newly launched hardrives/pendrives/CDs. Sold by most trustworthy Monk certified sellers.
+                                                                </p>
+                                                                <div class="btn__group">
+                                                                <a class="prod-view-button" href="/storage"><button>View Products</button></a>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        </li>
+                                                    </ul>
+                                                    </div>
+                                        
+                                                    
+                                        <!-- upcoming Section -->
+                                            <section class="section upcoming" id="upcoming">
+                                                <div class="upcoming__container container">
+                                                <div class="title">
+                                                    <h1 class="primary__title">Upcoming Products</h1>
+                                                </div>
+                                        
+                                                <div class="upcoming__center">
+                                                    <div class="product">
+                                                    <div class="img__container">
+                                                        <img src="https://m.media-amazon.com/images/I/719F8WdfBzL._AC_UY327_FMwebp_QL65_.jpg" alt="" />
+                                                    </div>
+                                                    <div class="product__bottom">
+                                                        <h3>HP 15 Jet Black</h3>
+                                                        <a href="#">Add To Wishlist</a>
+                                                    </div>
+                                                    </div>
+                                                    <div class="product">
+                                                    <div class="img__container">
+                                                        <img src="https://m.media-amazon.com/images/I/61p3lA4N3uL._AC_UY327_FMwebp_QL65_.jpg" alt="" />
+                                                    </div>
+                                                    <div class="product__bottom">
+                                                        <h3>Lenovo Legion 5 </h3>
+                                                        <a href="#">Add To Wishlist</a>
+                                                    </div>
+                                                    </div>
+                                                    <div class="product">
+                                                    <div class="img__container">
+                                                        <img src="https://m.media-amazon.com/images/I/71ne+SvArgS._AC_UY327_FMwebp_QL65_.jpg" alt="" />
+                                                    </div>
+                                                    <div class="product__bottom">
+                                                        <h3>Western Digital WD</h3>
+                                                        <a href="#">Add To Wishlist</a>
+                                                    </div>
+                                                    </div>
+                                                    <div class="product">
+                                                    <div class="img__container">
+                                                        <img src="https://m.media-amazon.com/images/I/71YswD1KjrL._AC_UY327_FMwebp_QL65_.jpg" alt="" />
+                                                    </div>
+                                                    <div class="product__bottom">
+                                                        <h3>HP CD (50 pcs)</h3>
+                                                        <a href="#">Add To Wishlist</a>
+                                                    </div>
+                                                    </div>
+                                                    <div class="product">
+                                                    <div class="img__container">
+                                                        <img src="https://m.media-amazon.com/images/I/71IkA3T7hIL._AC_UY327_FMwebp_QL65_.jpg" alt="" />
+                                                    </div>
+                                                    <div class="product__bottom">
+                                                        <h3>Samsung Galaxy M02s Black</h3>
+                                                        <a href="#">Add To Wishlist</a>
+                                                    </div>
+                                                    </div>
+                                                    <div class="product">
+                                                    <div class="img__container">
+                                                        <img src="https://m.media-amazon.com/images/I/618UBhFmaQS._AC_UY327_FMwebp_QL65_.jpg" alt="" />
+                                                    </div>
+                                                    <div class="product__bottom">
+                                                        <h3>Realme C11 </h3>
+                                                        <a href="#">Add To Wishlist</a>
+                                                    </div>
+                                                    </div>
+                                                    <div class="product">
+                                                    <div class="img__container">
+                                                        <img src="https://images-na.ssl-images-amazon.com/images/I/71sxlhYhKWL._SL1500_.jpg" alt="" />
+                                                    </div>
+                                                    <div class="product__bottom">
+                                                        <h3>HP 32GB USB 2.0 Pen Drive</h3>
+                                                        <a href="#">Add To Wishlist</a>
+                                                    </div>
+                                                    </div>
+                                                    <div class="product">
+                                                    <div class="img__container">
+                                                        <img src="https://m.media-amazon.com/images/I/61BE1LBx0kS._AC_UY327_FMwebp_QL65_.jpg" alt="" />
+                                                    </div>
+                                                    <div class="product__bottom">
+                                                        <h3>Dell G15 (Ascent Solid Color)</h3>
+                                                        <a href="#">Add To Wishlist</a>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </section>
+                                        
+                                            <!-- team -->
+                                            <section class="section team" id="team">
+                                                <div class="team__container container">
+                                                <div class="title">
+                                                    <h1 class="primary__title">Our Team</h1>
+                                                </div>
+                                        
+                                                <div class="team__center">
+                                                    <div class="team__box">
+                                                    <div class="img__cover">
+                                                        <img src="./images/ansh rusia.png" alt="" />
+                                                    </div>
+                                                    <div class="box__content">
+                                                        <h2>ANSH RUSIA</h2>
+                                                        <p>Co-Founder, The Monk Store.</p> 
+                                                        <P>UI/UX Designer</p>
+                                                    </div>
+                                                    </div>
+                                        
+                                                    <div class="team__box">
+                                                    <div class="img__cover">
+                                                        <img src="./images/shubhajeet pradhan.png" alt="" />
+                                                    </div>
+                                                    <div class="box__content">
+                                                        <h2>SHUBHAJEET PRADHAN</h2>
+                                                        <p>Co-Founder, The Monk Store.</p> 
+                                                        <p>Front-End Developer</p>
+                                                    </div>
+                                                    </div>
+                                        
+                                                    <div class="team__box">
+                                                    <div class="img__cover">
+                                                        <img src="./images/varun tiwari.png" alt="" />
+                                                    </div>
+                                                    <div class="box__content">
+                                                        <h2>VARUN KUMAR TIWARI</h2>
+                                                        <p>Co-Founder, The Monk Store. </p>
+                                                        <p>Full-Stack Developer</p>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </section>
+                                        
+                                            <!-- feedback -->
+                                            <section class="section feedback" id="feedback">
+                                              <div class="feedback__container container">
+                                                <div class="title">
+                                                  <h1 class="primary__title">FeedBack</h1>
+                                                </div>
+                                               <div class="feedback">
+                                                <form class="form" action="/feedback" method="POST">
+                                                    <div class="form-items">
+                                                      <textarea name="feedback" class="input message" cols="30" rows="10" placeholder="Type your Message here ....."></textarea>
+                                                    </div>
+                                                    <button type="submit" class="btn spinner-btn">
+                                                      Submit
+                                                      ${homepageSpinner}
+                                                      <i class="fas fa-arrow-right"></i>
+                                                    </button>
+                                                </form>
+                                                </div>
+                                            </section>
+                                        
+                                            <!-- Footer -->
+                                            <footer id="footer" class="section footer">
+                                                <div class="container">
+                                                <div class="footer__top">
+                                                    <div class="footer-top__box">
+                                                    <h3>EXTRAS</h3>
+                                                    <a href="#">Brands</a>
+                                                    <a href="#">Gift Cards</a>
+                                                    <a href="#">Specials</a>
+                                                    <a href="#">Support</a>
+                                                    </div>
+                                                    <div class="footer-top__box">
+                                                    <h3>INFORMATION</h3>
+                                                    <a href="/about-us">About Us</a>
+                                                    <a href="#">Privacy Policy</a>
+                                                    <a href="#">Terms & Conditions</a>
+                                                    <a href="#">Contact Us</a>
+                                                    </div>
+                                        
+                                                    <div class="footer-top__box">
+                                                    <h3>MY ACCOUNT</h3>
+                                                    <a href="#">My Account</a>
+                                                    <a href="/order-history">Order History</a>
+                                                    <a href="#">Cart</a>
+                                                    <a href="#">FeedBack</a>
+                                                    <a href="#">Returns</a>
+                                                    </div>
+                                                    <div class="footer-top__box">
+                                                    <h3>CONTACT US</h3>
+                                                    <div>
+                                                    B8-Jabalpur, 482002
+                                                    </div>
+                                                    <div>
+                                                        keplons@outlook.com
+                                                    </div>
+                                                    <div>
+                                                    +91-9878881179
+                                                    </div>
+                                                    <div>
+                                                    Madhya Pradesh, India.
+                                                    </div>
+                                                    </div>
+                                                    <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+                                                    <strong>
+                                                        <a href="#">The Monk Store.Inc</a>
+                                                    </strong>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                </div>
+                                            </footer>
+                                            <!-- End Footer -->
+                                            </main>
+                                            
+                                        </body>`
+        return homepage
+    }
 }
 
 const pageRender = (user, page)=>{
@@ -332,6 +728,7 @@ const pageRender = (user, page)=>{
                             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                             <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
                             <link rel="stylesheet" href="css/homepage.css" />
+                            <link rel="stylesheet" href=css/homepage-spinner.css />
                             
                             <title>Home-Page</title>
                             </head>`
@@ -538,7 +935,7 @@ const pageRender = (user, page)=>{
                                             <!-- Hero -->
                                             <div class="hero">
                                                 <div class="hero__content container">
-                                                <a href="#" class="btn btn-hero">Welcome to Monk Store</a>
+                                                <a href="#" class="btn-hero">Welcome to Monk Store</a>
                                                 </div>
                                         
                                                 <a href="#new__arrival" class="goto__next scroll-link">
@@ -582,7 +979,7 @@ const pageRender = (user, page)=>{
                                                                 <p>Find all newly launched smartphones. Sold by most trustworthy Monk certified sellers.
                                                                 </p>
                                                                 <div class="btn__group">
-                                                                <a class="prod-view-button" href="/laptop"><button>View Products</button></a>
+                                                                <a class="prod-view-button" href="/smartphone"><button>View Products</button></a>
                                                                 </div>
                                                             </div>
                                                             </div>
@@ -599,7 +996,7 @@ const pageRender = (user, page)=>{
                                                                 <p>Find all newly launched hardrives/pendrives/CDs. Sold by most trustworthy Monk certified sellers.
                                                                 </p>
                                                                 <div class="btn__group">
-                                                                <a class="prod-view-button" href="/laptop"><button>View Products</button></a>
+                                                                <a class="prod-view-button" href="/storage"><button>View Products</button></a>
                                                                 </div>
                                                             </div>
                                                             </div>
@@ -730,7 +1127,7 @@ const pageRender = (user, page)=>{
                                                     <div class="box__content">
                                                         <h2>VARUN KUMAR TIWARI</h2>
                                                         <p>Co-Founder, The Monk Store. </p>
-                                                        <p>Back-End Developer</p>
+                                                        <p>Full-Stack Developer</p>
                                                     </div>
                                                     </div>
                                                 </div>
@@ -739,25 +1136,21 @@ const pageRender = (user, page)=>{
                                         
                                             <!-- feedback -->
                                             <section class="section feedback" id="feedback">
-                                                <div class="feedback__container container">
+                                              <div class="feedback__container container">
                                                 <div class="title">
-                                                    <h1 class="primary__title">FeedBack</h1>
+                                                  <h1 class="primary__title">FeedBack</h1>
                                                 </div>
-                                        
-                                                <div class="feedback__center">
-                                                    <div class="feedback__box">
-                                                    <p>
-                                                    Share your feedback.
-                                                    </p>
+                                               <div class="feedback">
+                                                <form class="form" action="/feedback" method="POST">
+                                                    <div class="form-items">
+                                                      <textarea name="feedback" class="input message" cols="30" rows="10" placeholder="Type your Message here ....."></textarea>
                                                     </div>
-                                        
-                                                    <div class="feedback__box">
-                                                    <form action="#">
-                                                        <input type="message" placeholder="Message..." />
-                                                        <button>Send</button>
-                                                    </form>
-                                                    </div>
-                                                </div>
+                                                    <button class="btn spinner-btn">
+                                                      Submit
+                                                      ${homepageSpinner}
+                                                      <i class="fas fa-arrow-right"></i>
+                                                    </button>
+                                                </form>
                                                 </div>
                                             </section>
                                         
@@ -783,7 +1176,7 @@ const pageRender = (user, page)=>{
                                                     <div class="footer-top__box">
                                                     <h3>MY ACCOUNT</h3>
                                                     <a href="#">My Account</a>
-                                                    <a href="#">Order History</a>
+                                                    <a href="/order-history">Order History</a>
                                                     <a href="#">Cart</a>
                                                     <a href="#">FeedBack</a>
                                                     <a href="#">Returns</a>
@@ -939,11 +1332,6 @@ const pageRender = (user, page)=>{
                                                         </div>
                                                         </div>
                                                     </div>
-                                                    
-                                                        
-                                                        
-                                                        
-                                                    <div id="future-orders">    
                                                         <div class="order-container">
                                                         <div class="header">
                                                             <div class="row">
@@ -970,9 +1358,7 @@ const pageRender = (user, page)=>{
                                                             </div>
                                                             </div>
                                                         </div>
-                                                        </div>
                                                     
-                                                        <div id="future-orders-1">    
                                                         <div class="order-container">
                                                         <div class="header">
                                                             <div class="row">
@@ -999,9 +1385,7 @@ const pageRender = (user, page)=>{
                                                             </div>
                                                             </div>
                                                         </div>
-                                                        </div>
                                                     
-                                                        <div id="future-orders-2">    
                                                         <div class="order-container">
                                                         <div class="header">
                                                             <div class="row">
@@ -1028,9 +1412,7 @@ const pageRender = (user, page)=>{
                                                             </div>
                                                             </div>
                                                         </div>
-                                                        </div>
                                                     
-                                                        <div id="future-orders-3">    
                                                         <div class="order-container">
                                                         <div class="header">
                                                             <div class="row">
@@ -1056,7 +1438,6 @@ const pageRender = (user, page)=>{
                                                             <a href="#" class="btn-default"><i class="fa fa-download" aria-hidden="true"></i> Download Bill</a>
                                                             </div>
                                                             </div>
-                                                        </div>
                                                         </div>
                                                     
                                                     </div>      
@@ -1301,7 +1682,9 @@ const pageRender = (user, page)=>{
 const productRender ={
     laptopRender: laptopRender,
     smartphoneRender: smartphoneRender,
-    storageRender: storageRender
+    storageRender: storageRender,
+    orderHistoryRender: orderHistoryRender,
+    productView: productView
 }
 
 async function laptopRender(){
@@ -1320,7 +1703,6 @@ async function laptopRender(){
 
     try{
     let result = await pool.query(`SELECT * FROM products WHERE category = $1`, ['laptop'])
-    console.log(result.rows)
     for (let i = 0; i < result.rows.length; i++) {
         productCart += `<div class="card">
                             <div class="wrapper">
@@ -1332,7 +1714,11 @@ async function laptopRender(){
                                 <div class="actions">
                                 <div class="preciosGrupo">
                                     <div class="product_buttons">
-                                        <button class="btn wishlist">Buy Now</button>
+                                        <form action="/product-view" method="GET">
+                                        <input type="hidden" name="id" value="${result.rows[i].id}">
+                                        <input type="hidden" name="category" value="${result.rows[i].category}">
+                                        <button type="submit" class="btn wishlist">Buy Now</button>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="bakuretsu_icono action aFavs">
@@ -1464,7 +1850,11 @@ async function smartphoneRender(){
                                 <div class="actions">
                                 <div class="preciosGrupo">
                                     <div class="product_buttons">
-                                        <button class="btn wishlist">Buy Now</button>
+                                        <form action="/product-view" method="GET">
+                                        <input type="hidden" name="id" value="${result.rows[i].id}">
+                                        <input type="hidden" name="category" value="${result.rows[i].category}">
+                                        <button type="submit" class="btn wishlist">Buy Now</button>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="icono action aFavs">
@@ -1596,7 +1986,11 @@ async function storageRender(){
                                 <div class="actions">
                                 <div class="preciosGrupo">
                                     <div class="product_buttons">
-                                        <button class="btn wishlist">Buy Now</button>
+                                        <form action="/product-view" method="GET">
+                                        <input type="hidden" name="id" value="${result.rows[i].id}">
+                                        <input type="hidden" name="category" value="${result.rows[i].category}">
+                                        <button type="submit" class="btn wishlist">Buy Now</button>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="icono action aFavs">
@@ -1697,6 +2091,341 @@ async function storageRender(){
     catch(err){
         console.log(err)
     }
+}
+
+async function orderHistoryRender(user){
+    const layoutOrderHistory = `<!DOCTYPE html>
+    <head>
+    <meta charset="UTF-8">
+    <title>The Monk Store</title>
+    <link rel="stylesheet" href="css/order-history.css">
+    <link rel="stylesheet" href="css/footer.css">
+    </head>`
+    let orderedProduct = ``
+    let sum = 0
+
+    try{
+        const result = await pool.query(`SELECT * FROM orders WHERE useremail = $1`, [user.email])
+        for (let i = 0; i < result.rows.length; i++) {
+            
+            let orderImageUrl
+
+            if(result.rows[i].category == 'laptop') orderImageUrl = 'https://images-na.ssl-images-amazon.com/images/I/61pwrivrfUS._SL1500_.jpg'
+            else if(result.rows[i].category == 'smartphone') orderImageUrl = 'https://images-eu.ssl-images-amazon.com/images/I/31Qy4Tf82UL._SX300_SY300_QL70_FMwebp_.jpg'
+            else orderImageUrl = 'https://images-eu.ssl-images-amazon.com/images/I/41RbYlMPpBL._SX300_SY300_QL70_FMwebp_.jpg'
+
+            orderedProduct += `<div class="order-container">
+                                    <div class="header">
+                                        <div class="row">
+                                        <div class="col-1"><span>ORDERS PLACED</span><span>${result.rows[i].date}</span></div>
+                                        <div class="col-2"><span>TOTAL</span><span>Rs. ${result.rows[i].price}/-</span></div>
+                                        <div class="col-3"><span>SHIPPED TO</span><span>${user.name}</span></div>
+                                        <div class="col-4"><span>ORDER NUMBER</span><span>XXXXX</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="box"> 
+                                        <div class="row">
+                                        <div class="col-1">
+                                            <img src="${orderImageUrl}" alt="">
+                                        </div>
+                                        <div class="col-2">
+                                            <span class="product-title">${result.rows[i].name}<i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                            <p>Order Status: Delivered <br>
+                                            Total Quantity 01 <br>
+                                            Billed On: ${result.rows[i].date} </p>
+                                        <a href="#" class="btn-default"><i class="fa fa-repeat" aria-hidden="true"></i> Re-Order</a>
+                                        </div>
+                                        <div class="col-3">
+                                        <a href="#" class="btn-default"><i class="fa fa-download" aria-hidden="true"></i> Download Bill</a>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>`
+            
+            let number = result.rows[i].price
+            number = parseInt(number.split(',').join(''));
+            sum += number
+            
+        }
+        let gst = sum*(0.05)
+        let orderHistory = layoutOrderHistory + `<body>
+                                                    <div class="container">
+                                                    
+                                                    <div class="row">
+                                                        <div class="order-tittle">
+                                                        <a href="/homepage"><img src="images/the-monk-store-order-history.png" class="main-logo" height="80px" width="250px"><a>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row title-row">
+                                                        <div class="page-title">
+                                                        <h1>Order History</h1>
+                                                        </div>
+                                                    </div>  
+                                                    
+                                                    <div class="row order_sorter">
+                                                        <ul id="toggle-orders">
+                                                        <li class="first"></li>
+                                                        <li class="oh selected"><a href="#">Order History</a></li>
+                                                        <li class="fo"><a href="#">Cart Deck</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    
+                                                    <div class="row" id="order-history">
+                                                    
+                                                        <div class="row order-summary">
+                                                        <div class="totalspent-orders">
+                                                            <h2>Rs. ${sum}</h2>
+                                                            <h3>Total Spent</h3>
+                                                        </div>
+                                                        <div class="printqty-orders">
+                                                            <h2>${result.rows.length}</h2>
+                                                            <h3>Total Orders</h3>
+                                                        </div>
+                                                        <div class="total_gst">
+                                                            <h2>Rs. ${gst}</h2>
+                                                            <h3>Total GST Paid</h3>
+                                                        </div>
+                                                        <div class="ytd-orders">
+                                                            <h2>0</h2>
+                                                            <h3>Refund Request</h3>
+                                                        </div>
+                                                        </div>
+                                                            ${orderedProduct}
+                                                    </div>      
+                                                    </div>
+                                                    <p class="copyright">&copy Copyrights. All rights reservered, 2021</p>  
+                                                    </body>`
+
+        return orderHistory
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+async function productView(message_type, message_text, user, product){
+    if (message_type) {
+        message_color = 'lightgreen'
+    }
+    else if (message_type == '') {
+        message_color = 'transparent'
+    }
+    else{
+        message_color = '#ff7271'
+    }
+
+    message = message_text
+
+    layoutProductView = `<!DOCTYPE html>
+                        <head>
+                        <meta charset="UTF-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+                        <link rel="stylesheet" href="css/product-view.css" />
+                        <link rel="stylesheet" href="css/spinner.css" />
+                        <link rel="stylesheet" href="css/homepage-error.css" />
+                        
+                        <title>The Monk Store-Product View</title>
+                        </head>`
+
+    try{
+        let result = await pool.query(`SELECT * FROM products WHERE id = $1`, [product.id])
+        if(result.rows.length > 0){
+
+            details = result.rows[0]
+
+            let orderImageUrl
+            let width
+
+            if(details.category == 'laptop') {orderImageUrl = 'https://images-na.ssl-images-amazon.com/images/I/61pwrivrfUS._SL1500_.jpg'; width = '45%'}
+            else if(details.category == 'smartphone') {orderImageUrl = 'https://images-eu.ssl-images-amazon.com/images/I/31Qy4Tf82UL._SX300_SY300_QL70_FMwebp_.jpg' ; width = '25%'}
+            else {orderImageUrl = 'https://images-eu.ssl-images-amazon.com/images/I/41RbYlMPpBL._SX300_SY300_QL70_FMwebp_.jpg'; width = '35%'}
+
+            let productView = layoutProductView + `<body>
+                            <div class="notification">
+                            <div class="notification-container" style="background-color: ${message_color};">${message}</div>
+                            </div>
+                            <script>
+                            let div = document.getElementsByClassName('notification')[0];
+                            let secDiv = document.getElementsByClassName('notification-container')[0];
+                            if(secDiv.style["background-color"] != 'transparent'){
+                                setTimeout(() => {
+                                    div.style.animation = "slideBackToTop 250ms ease-in"
+                                    setTimeout(() => {
+                                    div.style["background-color"] = ""
+                                    div.style.color = "transparent"
+                                    setTimeout(() => {
+                                        div.remove()
+                                    }, 100);
+                                    }, 250);
+                                }, 5000);
+                            }
+                            else if (secDiv.style["background-color"] == 'transparent'){
+                                div.remove();
+                                console.log('removing');
+                            }
+                            </script>
+                        
+                            <header id="header" class="header">
+                            <!-- Navigation -->
+                            <div class="navigation">
+                                <div class="container">
+                                <nav class="nav__center">
+                                    <div class="nav__header">
+                                    <div class="nav__logo">
+                                    <a href="/homepage"><img src="svg/The-Monk-Store.svg"></a>
+                                    </div>
+                                        <div class="nav__hamburger">
+                                        <span>
+                                        <svg>
+                                            <use xlink:href="./images/sprite.svg#icon-menu"></use>
+                                        </svg>
+                                        </span>
+                                    </div>
+                                    </div>
+                        
+                                    <div class="nav__menu">
+                                    <div class="menu__top">
+                                        <h1 class="nav__category">Monk<span>Store</span></h1>
+                                        <div class="close__toggle">
+                                        <svg>
+                                            <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                                        </svg>
+                                        </div>
+                                    </div>
+                                    <ul class="nav__list">
+                                        <li class="nav__item">
+                                        <a href="/homepage" class="nav__link scroll-link">Home</a>
+                                        </li>
+                        
+                                        <li class="nav__item">
+                                        <a href="/settings" class="nav__link scroll-link">Settings</a>
+                                        </li>
+                        
+                                        <li class="nav__item">
+                                        <a href="/order-history" class="nav__link scroll-link">Order History</a>
+                                        </li>
+                                    </ul>
+                                    </div>
+                                </nav>
+                                </div>
+                            </div>
+                        
+                            <section>
+                                <div class="card">
+                        
+                                    <!-- Head Content -->
+                        
+                                    <div class="top-content">
+                                        <div class="travel-image">
+                                            <img src=${orderImageUrl} style="width: ${width};" alt="" >
+                                        </div>
+                        
+                                <!--  Middle Content  -->
+                        
+                                    </div>  
+                                    <div class="mid-content">
+                                        <div class="short-detail">
+                                            <h3>${details.name}</h3>
+                                        </div>
+                                    </div>
+                                    <div class="desc-content">
+                                        <div class="desc-nav">
+                                            <span>Description</span>
+                                            <span>Reviews</span>
+                                            <span>About</span>
+                                        </div>
+                                        <p>${details.description}</p>
+                                    </div>
+                                
+                                <!--  Bottom Content  -->
+                        
+                                    <div class="bottom-content">
+                                        <div class="desc-nav">
+                                            <p>Rs. ${details.price}/-</p>
+                                        </div>
+                                        <form action="/order" method="POST">
+                                        <input type="hidden" name="id" value="${result.rows[0].id}">
+                                        <input type="hidden" name="category" value="${result.rows[0].category}">
+                                        <button type="submit" class="btn wishlist spinner-btn">Buy Now</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                ${homepageSpinner}
+                            </section>
+                        
+                            <!-- Hero -->
+                            </header>
+                            <main>
+                            
+                        
+                        
+                                    
+                            <!-- Footer -->
+                            <footer id="footer" class="section footer">
+                                <div class="container">
+                                <div class="footer__top">
+                                    <div class="footer-top__box">
+                                    <h3>EXTRAS</h3>
+                                    <a href="#">Brands</a>
+                                    <a href="#">Gift Cards</a>
+                                    <a href="#">Specials</a>
+                                    <a href="#">Support</a>
+                                    </div>
+                                    <div class="footer-top__box">
+                                    <h3>INFORMATION</h3>
+                                    <a href="#">About Us</a>
+                                    <a href="#">Privacy Policy</a>
+                                    <a href="#">Terms & Conditions</a>
+                                    <a href="#">Contact Us</a>
+                                    </div>
+                        
+                                    <div class="footer-top__box">
+                                    <h3>MY ACCOUNT</h3>
+                                    <a href="#">My Account</a>
+                                    <a href="#">Order History</a>
+                                    <a href="#">Cart</a>
+                                    <a href="#">FeedBack</a>
+                                    <a href="#">Returns</a>
+                                    </div>
+                                    <div class="footer-top__box">
+                                    <h3>CONTACT US</h3>
+                                    <div>
+                                    B8-Jabalpur, 482002
+                                    </div>
+                                    <div>
+                                        keplons@outlook.com
+                                    </div>
+                                    <div>
+                                    +91-9878881179
+                                    </div>
+                                    <div>
+                                    Madhya Pradesh, India.
+                                    </div>
+                                    </div>
+                                    <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+                                    <strong>
+                                        <a href="#">The Monk Store.Inc</a>
+                                    </strong>
+                                    </div>
+                                </div>
+                                </div>
+                                </div>
+                            </footer>
+                            <!-- End Footer -->
+                            </main>
+                        </body>
+                        `
+
+        return productView
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+    
 }
 
 module.exports = {

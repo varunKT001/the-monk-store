@@ -138,6 +138,33 @@ const getUserByEmail = async (email)=>{
     }
 }
 
+/*---------- ORDER HELPER: TAKES USER AND PRODUCT INFO AS INPUT AND ORDER THE PARTICULAR PRODUCT ----------*/
+/*---------- RETURNS FULL ORDER INFO AND ORDER STATUS(SUCCESS OR FAILURE) TO THE CALLING FUNCTION ----------*/
+const orderHelper = async (user, product)=>{
+    try{
+        let result = await pool.query(`SELECT * FROM products WHERE id = $1`, [product.id])
+        if(result.rows.length > 0){
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            today = mm + '/' + dd + '/' + yyyy
+            try{
+                let result_1 = await pool.query(`INSERT INTO orders (productId, name, price, category, date, useremail) VALUES ($1, $2, $3, $4, $5, $6)`, [product.id, result.rows[0].name, result.rows[0].price, result.rows[0].category, today, user.email])
+                return {val: true, productOrdered: result.rows[0]}
+            }
+            catch(err){
+                console.log(err)
+                return {val: false, productOrdered: 'CANNOT PLACE ORDER'}
+            }
+        }
+    }
+    catch(err){
+        console.log(err)
+        return false
+    }
+}
+
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|  R O U T E S  |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -485,7 +512,16 @@ app.get('/logout', checkAuthorization, (req, res)=>{
 })
 
 app.get('/homepage', checkAuthorization, (req, res)=>{
-    res.send(pageRender(req.user, 'homepage'))
+    const message = req.flash()
+    if(message.msg){
+        return res.send(notificationRender(true, message.msg, 'homepage'))
+    }
+    if(message.emsg){
+        return res.send(notificationRender(false, message.emsg, 'homepage'))
+    }
+    else{
+        return res.send(pageRender(req.user, 'homepage'))
+    }
     // res.sendFile(path.join(__dirname, "markups", "homepage.html"))
 })
 
@@ -493,8 +529,109 @@ app.get('/feedback', checkAuthorization, (req, res)=>{
     res.send(pageRender(req.user, 'feedback'))
 })
 
-app.get('/order-history', checkAuthorization, (req, res)=>{
-    res.send(pageRender(req.user, 'order-history'))
+app.post('/feedback', checkAuthorization, (req, res)=>{
+
+    const feedback = req.body.feedback
+    user = req.user
+
+    const html = `<h1>hey Team Keplons</h1>
+    <h3>Here is a feedback for The Monk Store</h3>
+    <p>${feedback}</p>
+    <p>Regards,<br>${user.name},<br><a>${user.email}</a></p>`
+
+    const mailOptions = {
+    from: `${user.name} <${EMAIL}>`,
+    to: EMAIL,
+    subject: 'FEEDBACK',
+    html: html
+    }
+
+    /*---------- SENDING MAIL KEPLONS EMAIL ADDRESS ----------*/
+    transport.sendMail(mailOptions, (err, info)=>{
+    if(err){
+    console.log(err)
+    req.flash('emsg', 'Something went wrong!')
+    return res.redirect('/homepage')
+    }
+    else{
+    console.log('mail sent')
+    req.flash('msg', 'Feedback sent')
+    return res.redirect('/homepage')
+    }
+    })
+})
+
+app.post('/order', checkAuthorization, async (req, res)=>{
+    const product = {
+        id: req.body.id,
+        category: req.body.category
+    }
+    console.log('order request recieved', product)
+    let success = await orderHelper(req.user, product)
+    if(success.val){
+        const html = `<h1>hey, ${req.user.name}</h1>
+        <h3>ORDER PLACED</h3>
+        <p>PRODUCT NAME: ${success.productOrdered.name}</p>
+        <p>PRODUCT PRICE: Rs. ${success.productOrdered.price}/-</p>
+        <p>DELIVERY MODE: Cash On Delivery(COD)</p>
+        <br>
+        <p>Thanks for shopping with The Monk Store,</p>
+        <p>Stay Home, Stay Safe</p>
+        <br><br>
+        <p>For any query:</p>
+        <p>Mail us: support@monkstore.com </p>
+        <p>Call us: 1234567890, 0987654321 (TOLL-FREE) </p>`
+
+        const mailOptions = {
+        from: `"The Monk Store" <${EMAIL}>`,
+        to: req.user.email,
+        subject: 'ORDER REQUEST',
+        html: html
+        }
+        
+        /*---------- SENDING A CONFIRMATION EMAIL TO THE USER AFTER SUCCESSFULL ORDER ----------*/
+        transport.sendMail(mailOptions, (err, info)=>{
+        if(err){
+            console.log(err)
+            req.flash('emsg', 'Something went wrong!')
+            return res.redirect(`/product-view?id=${product.id}&category=${product.category}`)
+        }
+        else{
+            console.log('mail sent')
+            req.flash('msg', 'Order placed!')
+            return res.redirect(`/product-view?id=${product.id}&category=${product.category}`)
+        }
+        })
+    }
+    else{
+        req.flash('emsg', 'Something went wrong!')
+        return res.redirect(`/product-view?id=${product.id}&category=${product.category}`)
+    }
+})
+
+app.get('/order-history', checkAuthorization, async (req, res)=>{
+    let orderHistory = await productRender.orderHistoryRender(req.user)
+    res.send(orderHistory)
+})
+
+app.get('/product-view', checkAuthorization, async (req, res)=>{
+    product = {
+        id : req.query.id,
+        category : req.querycategory
+    }
+
+    const message = req.flash()
+    if(message.msg){
+        let productView = await productRender.productView(true, message.msg, req.user, product)
+        return res.send(productView)    }
+    if(message.emsg){
+        let productView = await productRender.productView(fale, message.emsgreturn , req.user, product)
+        return res.send(productView)    }
+    else{
+        let productView = await productRender.productView('', '', req.user, product)
+        return res.send(productView)    }
+
+
 })
 
 app.get('/about-us', checkAuthorization, (req, res)=>{
@@ -605,19 +742,19 @@ app.get('/seller', [checkAuthorization, checkSeller, (req, res)=>{
     res.send(`hello, ${req.user.name}. Welcome to seller homepage.`)
 }])
 
-app.get('/laptop', checkAuthorization, async (req, res)=>{
+app.get('/laptop', checkAuthorization, async (req, res)=>{             
     let laptop = await productRender.laptopRender()
-    res.send(laptop)
+    return res.send(laptop)
 })
 
 app.get('/smartphone', checkAuthorization, async (req, res)=>{
     let smartphone = await productRender.smartphoneRender()
-    res.send(smartphone)
+    return res.send(smartphone)
 })
 
 app.get('/storage', checkAuthorization, async (req, res)=>{
     let storage = await productRender.storageRender()
-    res.send(storage)
+    return res.send(storage)        
 })
 
 app.listen(PORT, ()=>{

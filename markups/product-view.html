@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  <link rel="stylesheet" href="css/product-view.css" />
+
+  <title>The Monk Store-Product View</title>
+</head>
+
+<body>
+
+  <div class="notification">
+    <div class="notification-container" style="background-color: ${message_color};">${message}</div>
+    </div>
+    <script>
+    let div = document.getElementsByClassName('notification')[0]
+    setTimeout(() => {
+        div.style.animation = "slideBackToTop 250ms ease-in"
+        setTimeout(() => {
+        div.style["background-color"] = ""
+        div.style.color = "transparent"
+        setTimeout(() => {
+            div.remove()
+        }, 100);
+        }, 250);
+    }, 5000);
+    </script>
+
+  <header id="header" class="header">
+    <!-- Navigation -->
+    <div class="navigation">
+      <div class="container">
+        <nav class="nav__center">
+          <div class="nav__header">
+            <div class="nav__logo">
+             <a href="/homepage"><img src="svg/The-Monk-Store.svg"></a>
+            </div>
+              <div class="nav__hamburger">
+              <span>
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-menu"></use>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="nav__menu">
+            <div class="menu__top">
+              <h1 class="nav__category">Monk<span>Store</span></h1>
+              <div class="close__toggle">
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                </svg>
+              </div>
+            </div>
+            <ul class="nav__list">
+              <li class="nav__item">
+                <a href="#header" class="nav__link scroll-link">Home</a>
+              </li>
+
+              <li class="nav__item">
+                <a href="#upcoming" class="nav__link scroll-link">Settings</a>
+              </li>
+
+              <li class="nav__item">
+                <a href="#team" class="nav__link scroll-link">Order History</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <section>
+      <div class="card">
+
+          <!-- Head Content -->
+ 
+          <div class="top-content">
+              <div class="travel-image">
+                  <img src="https://images-na.ssl-images-amazon.com/images/I/61Dw5Z8LzJL._SL1000_.jpg" alt="" >
+              </div>
+
+       <!--  Middle Content  -->
+
+          </div>  
+          <div class="mid-content">
+              <div class="short-detail">
+                  <h3>MI 10T Pro 5G </h3>
+              </div>
+          </div>
+          <div class="desc-content">
+              <div class="desc-nav">
+                  <span>Description</span>
+                  <span>Reviews</span>
+                  <span>About</span>
+              </div>
+              <p>Cosmic Black, 8GB RAM, 128GB Storage | Alexa Hands-Free Capable</p>
+          </div>
+      
+      <!--  Bottom Content  -->
+
+          <div class="bottom-content">
+              <div class="desc-nav">
+                  <p>Rs. 36,999.00/-</p>
+              </div>
+              <form action="/order" method="POST">
+                <input type="hidden" name="id" value="${result.rows[i].id}">
+                <input type="hidden" name="category" value="${result.rows[i].category}">
+                <button type="submit" class="btn wishlist">Buy Now</button>
+              </form>
+          </div>
+      </div>
+  </section>
+
+    <!-- Hero -->
+  </header>
+  <main>
+    
+
+
+          
+    <!-- Footer -->
+    <footer id="footer" class="section footer">
+      <div class="container">
+        <div class="footer__top">
+          <div class="footer-top__box">
+            <h3>EXTRAS</h3>
+            <a href="#">Brands</a>
+            <a href="#">Gift Cards</a>
+            <a href="#">Specials</a>
+            <a href="#">Support</a>
+          </div>
+          <div class="footer-top__box">
+            <h3>INFORMATION</h3>
+            <a href="#">About Us</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+          </div>
+
+          <div class="footer-top__box">
+            <h3>MY ACCOUNT</h3>
+            <a href="#">My Account</a>
+            <a href="#">Order History</a>
+            <a href="#">Cart</a>
+            <a href="#">FeedBack</a>
+            <a href="#">Returns</a>
+          </div>
+          <div class="footer-top__box">
+            <h3>CONTACT US</h3>
+            <div>
+             B8-Jabalpur, 482002
+            </div>
+            <div>
+              keplons@outlook.com
+            </div>
+            <div>
+             +91-9878881179
+            </div>
+            <div>
+             Madhya Pradesh, India.
+            </div>
+          </div>
+          <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+            <strong>
+              <a href="#">The Monk Store.Inc</a>
+            </strong>
+          </div>
+        </div>
+      </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+  </main>
+</body>
+
+</html>
