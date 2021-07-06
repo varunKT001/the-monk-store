@@ -2058,7 +2058,7 @@ async function storageRender(){
                                             <section class="section upcoming" id="upcoming">
                                                 <div class="upcoming__container container">
                                                 <div class="title">
-                                                    <h1 class="primary__title">SMARTPHONES</h1>
+                                                    <h1 class="primary__title">STORAGES</h1>
                                                 </div>
                                         
                                         <div class="contenedorCards">  
