@@ -321,7 +321,7 @@ app.post('/register', (req, res)=>{
                         if (error) console.log(error)
                     })
 
-                    req.flash('msg', 'check your email and verify')
+                    req.flash('msg', 'An Email Verification has been sent (CHECK SPAM FOLDER)')
                     return res.redirect('/login')
                 }
             })
@@ -408,7 +408,7 @@ app.post('/forgot-password', async (req, res)=>{
     /*---------- THE RESET LINK CONTAINS JWT TOKEN SIGNED USING USER EMAIL ----------*/
     const verificationToken = jwt.sign({email: user.email}, "hellohi", {expiresIn: '2m'})
     
-    const url = `http://${process.env.SITE_URL}/password-reset/${verificationToken}`
+    const url = `http://${process.env.SITE_URL}/account/password-reset/${verificationToken}`
 
     const html = `<h1>hey, ${user.name}</h1>
                   <h3>Password Change Process</h3>
@@ -432,7 +432,7 @@ app.post('/forgot-password', async (req, res)=>{
         }
         else{
             console.log('mail sent')
-            req.flash('msg', 'check your email and follow the instruction')
+            req.flash('msg', 'A Password Reset Link has been sent (CHECK SPAM FOLDER)')
             return res.redirect('/forgot-password')
         }
     })
