@@ -112,7 +112,7 @@ const getUserByUsername = async (username)=>{
     return user.rows[0]
     }
     catch(err){
-        throw err
+         console.log(err)
     }
 }
 
@@ -123,7 +123,7 @@ const getUserByID = async (id)=>{
     return user.rows[0]
     }
     catch(err){
-        throw err
+        console.log(err)
     }
 }
 
@@ -134,7 +134,7 @@ const getUserByEmail = async (email)=>{
     return user.rows[0]
     }
     catch(err){
-        throw err
+        console.log(err)
     }
 }
 
@@ -291,7 +291,7 @@ app.post('/register', (req, res)=>{
             const verificationToken = jwt.sign({id: newUser.id}, "hellohi", {expiresIn: '2m'})
 
             /*---------- VERIFICATION LINK ----------*/
-            const url = `http://localhost:5000/account/verify/${newUser.email}/${verificationToken}`
+            const url = `http://${process.env.SITE_URL}/account/verify/${newUser.email}/${verificationToken}`
 
             const html = `<h1>hey, ${newUser.name}</h1>
                         <h3>Account Verification</h3>
@@ -408,7 +408,7 @@ app.post('/forgot-password', async (req, res)=>{
     /*---------- THE RESET LINK CONTAINS JWT TOKEN SIGNED USING USER EMAIL ----------*/
     const verificationToken = jwt.sign({email: user.email}, "hellohi", {expiresIn: '2m'})
     
-    const url = `http://localhost:5000/account/password-reset/${verificationToken}`
+    const url = `http://${process.env.SITE_URL}/password-reset/${verificationToken}`
 
     const html = `<h1>hey, ${user.name}</h1>
                   <h3>Password Change Process</h3>
@@ -654,7 +654,6 @@ app.get('/settings', checkAuthorization, (req, res)=>{
 
 app.get('/seller-login', checkAuthorization, (req, res)=>{
     const message = req.flash()
-    console.log(req.user)
     if(message.msg){
         return res.send(notificationRender(true, message.msg, 'seller-login', req.user))
     }
@@ -668,7 +667,7 @@ app.get('/seller-login', checkAuthorization, (req, res)=>{
 
 app.post('/seller-login', async (req, res)=>{
     const reqUser = {
-        name: req.body.name,
+        email: req.body.email,
         password: req.body.password,
         userToken: req.body.emailToken
     }
@@ -679,11 +678,11 @@ app.post('/seller-login', async (req, res)=>{
     const user = await getUserByEmail(reqUser.userToken)
 
     /*---------- CHECKING IF THE CREDENTIALS ENTERED ARE CORRECT OR NOT ----------*/
-    if(user.name != reqUser.name){
-        return res.send(notificationRender(false, 'User not found!', 'seller-login'))
+    if(user.email != reqUser.email){
+        return res.send(notificationRender(false, 'User not found!', 'seller-login', req.body.emailToken))
     }
     if(!(user.password == reqUser.password)){
-        return res.send(notificationRender(false, 'Password incorrect!', 'seller-login'))
+        return res.send(notificationRender(false, 'Password incorrect!', 'seller-login', req.body.emailToken))
     }
     /*---------- CHECKING CREDENTIALS END ----------*/
 
@@ -694,7 +693,7 @@ app.post('/seller-login', async (req, res)=>{
             console.log(err)
         }
         else{
-            const html = `<h1>hey, ${reqUser.name}</h1>
+            const html = `<h1>hey, ${user.name}</h1>
                         <h3>Welcome to Monk store</h3>
                         <p>Thank you for becoming a seller.</p>`
 

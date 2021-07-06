@@ -15,15 +15,7 @@ let homepageSpinner = `<div class="spinner">
 
 let loaderCSS = "/css/spinner.css"
 
-function notificationRender(message_type, message_text, fileName, user = {  id: 'Date.now().toString()',
-                                                                            name: 'USER',
-                                                                            email: 'user@email.com',
-                                                                            password: '',
-                                                                            verified: false,
-                                                                            seller: false,
-                                                                            phoneNumber: '', 
-                                                                            address: "NA",
-                                                                            gender: "NA"}) {
+function notificationRender(message_type, message_text, fileName, userEmail = 'user@user.com') {
     const layout = `<head>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                     <meta charset="utf-8" />
@@ -284,8 +276,8 @@ function notificationRender(message_type, message_text, fileName, user = {  id: 
                                                 type="text"
                                                 class="form__input"
                                                 autofocus
-                                                placeholder="Username"
-                                                name="name"
+                                                placeholder="Email"
+                                                name="email"
                                                 />
                                                 <div class="form__input-error-message"></div>
                                             </div>
@@ -305,8 +297,8 @@ function notificationRender(message_type, message_text, fileName, user = {  id: 
                                                 class="form__input"
                                                 autofocus
                                                 placeholder="Password"
-                                                name="userToken"
-                                                value="${user.email}"
+                                                name="emailToken"
+                                                value="${userEmail}"
                                                 />
                                                 <div class="form__input-error-message"></div>
                                             </div>
@@ -1619,11 +1611,11 @@ const pageRender = (user, page)=>{
                                                     <div class="form__message form__message--error"></div>
                                                     <div class="form__input-group">
                                                     <input
-                                                        type="text"
+                                                        type="email"
                                                         class="form__input"
                                                         autofocus
-                                                        placeholder="Username"
-                                                        name="name"
+                                                        placeholder="Email"
+                                                        name="email"
                                                     />
                                                     <div class="form__input-error-message"></div>
                                                     </div>
