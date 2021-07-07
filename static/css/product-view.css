@@ -473,7 +473,6 @@ section{
 
 .card{
     width: 500px;
-    height: 500px;
     background: #FEFEFE;
     border-radius: 10px;
     overflow: hidden;
@@ -582,7 +581,7 @@ section{
 }
 .desc-content p{
     margin-top: 10px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
     color: #000000;
 }
@@ -600,6 +599,7 @@ section{
 
 .bottom-content{
     margin-top: 65px;
+    margin-bottom: 20px;
     padding: 0 20px;
     display: flex;
     align-items: center;

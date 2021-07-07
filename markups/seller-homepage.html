@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/seller-homepage.css" />
+
+  <title>The Monk Store-Seller Page</title>
+</head>
+
+<body>
+
+  <header id="header" class="header">
+
+    <!-- Navigation -->
+    
+    <div class="navigation">
+      <div class="container">
+        <nav class="nav__center">
+          <div class="nav__header">
+            <div class="nav__logo">
+             <img src="The-Monk-Store.svg">
+            </div>
+              <div class="nav__hamburger">
+              <span>
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-menu"></use>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="nav__menu">
+            <div class="menu__top">
+              <h1 class="nav__category">Monk<span>Store</span></h1>
+              <div class="close__toggle">
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                </svg>
+              </div>
+            </div>
+            <ul class="nav__list">
+              <li class="nav__item">
+                <a href="#header" class="nav__link scroll-link">Home</a>
+              </li>
+
+              <li class="nav__item">
+                <a href="#upcoming" class="nav__link scroll-link">Products Delivered</a>
+              </li>
+
+              <li class="nav__item">
+                <a href="#team" class="nav__link scroll-link">Log Out</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero__content container">
+        <a href="#" class="btn btn-hero">Sell you Products</a>
+      </div>
+
+      <a href="#new__arrival" class="goto__next scroll-link">
+      </a>
+    </div>
+  </header>
+  <main>
+    
+   <section>
+        <div class="card">
+
+           <div class="container">
+  <div class="title-form">
+    <h1>Product Details</h1>
+  </div>
+  <form class="price-form">
+    <div class="field-form">
+      <input type="text" name="studentID" class="student-id" placeholder="Price" autofocus>
+    </div>
+    <div class="field-form">
+      <input type="text" name="firstname" class="first-name" placeholder="Product name">
+    </div>
+    
+    <div class="field-form category form">
+      <span>Category</span>
+        <select name="category" id="category select">
+          <option value="">Laptop</option>
+          <option value="01">Smartphone</option>
+          <option value="02">Storage</option>
+        </select>  
+    </div>
+
+    <div class="field-form description">
+      <textarea name="description" id="description" placeholder="Description"></textarea>
+      </div>
+    
+    <div class="field-form price-range">
+        <select name="year" id="schoolyear">
+          <option value="">Price Range</option>
+          <option value="1">5,000 - 15,000</option>
+          <option value="2">15,000 - 25,000</option>
+          <option value="3">25,000 - 55,000</option>
+          <option value="4">55,000 - 95,000</option>
+          <option value="5">95,000 - 1,50,000</option>
+        </select>
+        <select name="color" id="color">
+          <option value="">Color</option>
+          <option value="a">Red</option>
+          <option value="b">Black</option>
+          <option value="c">Cyan</option>
+          <option value="d">Green</option>
+          <option value="e">Blue</option>
+          <option value="f">White</option>
+          <option value="g">Orange</option>
+          <option value="h">Grey</option>
+      </select>   
+    </div>
+    <div class="field-form button">
+      <button class="add" value="Add">Add Products</button>
+    </div>
+  </form>
+</div>
+
+          
+    <!-- Footer -->
+    <footer id="footer" class="section footer">
+      <div class="container">
+        <div class="footer__top">
+          <div class="footer-top__box">
+            <h3>EXTRAS</h3>
+            <a href="#">Brands</a>
+            <a href="#">Gift Cards</a>
+            <a href="#">Specials</a>
+            <a href="#">Support</a>
+          </div>
+          <div class="footer-top__box">
+            <h3>INFORMATION</h3>
+            <a href="#">About Us</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+          </div>
+
+          <div class="footer-top__box">
+            <h3>MY ACCOUNT</h3>
+            <a href="#">My Account</a>
+            <a href="#">Order History</a>
+            <a href="#">Cart</a>
+            <a href="#">FeedBack</a>
+            <a href="#">Returns</a>
+          </div>
+          <div class="footer-top__box">
+            <h3>CONTACT US</h3>
+            <div>
+             B8-Jabalpur, 482002
+            </div>
+            <div>
+              keplons@outlook.com
+            </div>
+            <div>
+             +91-9878881179
+            </div>
+            <div>
+             Madhya Pradesh, India.
+            </div>
+          </div>
+          <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+            <strong>
+              <a href="#">The Monk Store.Inc</a>
+            </strong>
+          </div>
+        </div>
+      </div>
+      </div>
+    </footer>
+    <!-- End Footer -->
+  </main>
+</body>
+
+</html>

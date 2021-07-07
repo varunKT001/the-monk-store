@@ -68,7 +68,7 @@ const checkAuthorization = (req, res, next)=>{
         const token = req.cookies.token
         jwt.verify(token, 'secret', (err, userDetails)=>{
             if(err){
-                return res.redirect('/login')
+                return res.redirect('/landing')
             }
             req.user = userDetails.user
 
@@ -78,7 +78,7 @@ const checkAuthorization = (req, res, next)=>{
         })
     }
     else{
-        return res.redirect('/login')
+        return res.redirect('/landing')
     }
 }
 
@@ -165,10 +165,71 @@ const orderHelper = async (user, product)=>{
     }
 }
 
+const addToCartHelper = async (user, product)=>{
+    try{
+        let result = await pool.query(`SELECT * FROM products WHERE id = $1`, [product.id])
+        if(result.rows.length > 0){
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            today = mm + '/' + dd + '/' + yyyy
+            try{
+                let result_1 = await pool.query(`INSERT INTO cart (productId, name, price, category, date, useremail) VALUES ($1, $2, $3, $4, $5, $6)`, [product.id, result.rows[0].name, result.rows[0].price, result.rows[0].category, today, user.email])
+                return {val: true, productOrdered: result.rows[0]}
+            }
+            catch(err){
+                console.log(err)
+                return {val: false, productOrdered: 'CANNOT ADD TO CART'}
+            }
+        }
+    }
+    catch(err){
+        console.log(err)
+        return false
+    }
+}
+
+const addProductHelper = async (product, user)=>{
+    try{
+        let result = await pool.query(`INSERT INTO products (name, price, category, description, seller) VALUES ($1, $2, $3, $4, $5)`, [product.name, product.price, product.category, product.description, user.email])
+        return {val: true}
+    }
+    catch(err){
+        console.log(err)
+        return {val: false}
+    }
+}
+
+const removeProductHelper = async (product, user)=>{
+    try{
+        let result = await pool.query(`DELETE FROM products WHERE id = $1 AND seller = $2`, [product.id, user.email])
+        return {val: true}
+    }
+    catch(err){
+        console.log(err)
+        return {val: false}
+    }
+}
+
+const settingsHelper = async (user, newsettings)=>{
+    try{
+        let result = await pool.query(`UPDATE users SET phonenumber = $1, gender = $2, address = $3 WHERE email = $4`, [newsettings.phoneNumber, newsettings.gender, newsettings.address, user.email])
+        return {val: true}
+    }
+    catch(err){
+        console.log(err)
+        return {val: false}
+    }
+}
+
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|  R O U T E S  |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+app.get('/landing', (req, res)=>{
+    res.send(pageRender(null, 'landing'))
+})
 
 app.get('/', checkAuthorization, (req, res)=>{
     res.redirect('/homepage')
@@ -291,7 +352,7 @@ app.post('/register', (req, res)=>{
             const verificationToken = jwt.sign({id: newUser.id}, "hellohi", {expiresIn: '2m'})
 
             /*---------- VERIFICATION LINK ----------*/
-            const url = `http://${process.env.SITE_URL}/account/verify/${newUser.email}/${verificationToken}`
+            const url = `https://${process.env.SITE_URL}/account/verify/${newUser.email}/${verificationToken}`
 
             const html = `<h1>hey, ${newUser.name}</h1>
                         <h3>Account Verification</h3>
@@ -408,7 +469,7 @@ app.post('/forgot-password', async (req, res)=>{
     /*---------- THE RESET LINK CONTAINS JWT TOKEN SIGNED USING USER EMAIL ----------*/
     const verificationToken = jwt.sign({email: user.email}, "hellohi", {expiresIn: '2m'})
     
-    const url = `http://${process.env.SITE_URL}/account/password-reset/${verificationToken}`
+    const url = `https://${process.env.SITE_URL}/account/password-reset/${verificationToken}`
 
     const html = `<h1>hey, ${user.name}</h1>
                   <h3>Password Change Process</h3>
@@ -614,10 +675,32 @@ app.get('/order-history', checkAuthorization, async (req, res)=>{
     res.send(orderHistory)
 })
 
+app.get('/cart', checkAuthorization, async (req, res)=>{
+    let orderHistory = await productRender.cartHistoryRender(req.user)
+    res.send(orderHistory)
+})
+
+app.post('/add-cart', checkAuthorization, async (req, res)=>{
+    const product = {
+        id: req.body.id,
+        category: req.body.category
+    }
+    console.log('cart request recieved', product)
+    let success = await addToCartHelper(req.user, product)
+    if(success.val){
+        req.flash('msg', 'Added to cart!')
+        return res.redirect(`/product-view?id=${product.id}&category=${product.category}`)
+    }
+    else{
+        req.flash('emsg', 'Something went wrong!')
+        return res.redirect(`/product-view?id=${product.id}&category=${product.category}`)
+    }
+}) 
+
 app.get('/product-view', checkAuthorization, async (req, res)=>{
     product = {
         id : req.query.id,
-        category : req.querycategory
+        category : req.query.category
     }
 
     const message = req.flash()
@@ -642,13 +725,44 @@ app.get('/settings', checkAuthorization, (req, res)=>{
     const user = req.user
     const message = req.flash()
     if(message.msg){
-        return res.send(notificationRender(true, message.msg, 'settings'))
+        return res.send(notificationRender(true, message.msg, 'settings', req.user))
     }
     if(message.emsg){
-        return res.send(notificationRender(false, message.emsg, 'settings'))
+        return res.send(notificationRender(false, message.emsg, 'settings', req.user))
     }
     else{
-        return res.send(pageRender(user, 'settings'))
+        return res.send(pageRender(user, 'settings', req.user))
+    }
+})
+
+app.post('/settings', checkAuthorization, async (req, res)=>{
+    const newsettings = {
+        phoneNumber: req.body.phoneNumber, 
+        gender: req.body.gender,
+        address: req.body.address
+    }
+
+    if(newsettings.phoneNumber == 'null'){
+        req.flash('emsg', 'Enter the Mobile Number!')
+        return res.redirect('/settings')
+    }
+    if(newsettings.gender == 'null'){
+        req.flash('emsg', 'Enter the Gender!')
+        return res.redirect('/settings')
+    }
+    if(newsettings.address == 'null'){
+        req.flash('emsg', 'Enter the Address!')
+        return res.redirect('/settings')
+    }
+
+    let success = await settingsHelper(req.user, newsettings)
+    if(success.val){
+        req.flash('msg', 'Profile Updated ')
+        return res.redirect('/logout')
+    }
+    else{
+        req.flash('emsg', 'Something went wrong!')
+        return res.redirect('/settings')
     }
 })
 
@@ -679,10 +793,10 @@ app.post('/seller-login', async (req, res)=>{
 
     /*---------- CHECKING IF THE CREDENTIALS ENTERED ARE CORRECT OR NOT ----------*/
     if(user.email != reqUser.email){
-        return res.send(notificationRender(false, 'User not found!', 'seller-login', req.body.emailToken))
+        return res.send(notificationRender(false, 'User not found!', 'seller-login', {email: req.body.emailToken}))
     }
     if(!(user.password == reqUser.password)){
-        return res.send(notificationRender(false, 'Password incorrect!', 'seller-login', req.body.emailToken))
+        return res.send(notificationRender(false, 'Password incorrect!', 'seller-login', {email: req.body.emailToken}))
     }
     /*---------- CHECKING CREDENTIALS END ----------*/
 
@@ -738,8 +852,41 @@ app.post('/seller-login', async (req, res)=>{
 })
 
 app.get('/seller', [checkAuthorization, checkSeller, (req, res)=>{
-    res.send(`hello, ${req.user.name}. Welcome to seller homepage.`)
+    const message = req.flash()
+    if(message.msg){
+        return res.send(notificationRender(true, message.msg, 'seller-homepage'))
+    }
+    if(message.emsg){
+        return res.send(notificationRender(false, message.emsg, 'seller-homepage'))
+    }
+    else{
+        return res.send(pageRender(req.user, 'seller-homepage'))
+    }
 }])
+
+app.post('/add-product', checkAuthorization, async (req, res)=>{
+    let category
+    if (req.body.category == '00') category = 'laptop'
+    else if (req.body.category == '01') category = 'smartphone'
+    else category = 'storage'
+    
+    let product = {
+        name: req.body.name, 
+        price: req.body.price,
+        category: category, 
+        description: req.body.description
+    }
+
+    let success = await addProductHelper(product, req.user)
+    if(success.val){
+        req.flash('msg', 'Product Added Successfully!')
+        return res.redirect('/seller')
+    }
+    else{
+        req.flash('emsg', 'Something went wrong!')
+        return res.redirect('/homepage')
+    }
+})
 
 app.get('/laptop', checkAuthorization, async (req, res)=>{             
     let laptop = await productRender.laptopRender()
@@ -754,6 +901,24 @@ app.get('/smartphone', checkAuthorization, async (req, res)=>{
 app.get('/storage', checkAuthorization, async (req, res)=>{
     let storage = await productRender.storageRender()
     return res.send(storage)        
+})
+
+app.get('/seller-product', checkAuthorization, async (req, res)=>{
+    let sellerProduct = await productRender.sellerProductRender(req.user)
+    res.send(sellerProduct)
+})
+
+app.post('/remove-seller-product', checkAuthorization, async (req, res)=>{
+    product ={
+        id: req.body.id
+    }
+    let success = await removeProductHelper(product, req.user)
+    if(success.val){
+        return res.redirect('/seller-product')
+    }
+    else{
+        return res.redirect('/seller-product')
+    }
 })
 
 app.listen(PORT, ()=>{

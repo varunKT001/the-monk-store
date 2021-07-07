@@ -15,7 +15,7 @@ let homepageSpinner = `<div class="spinner">
 
 let loaderCSS = "/css/spinner.css"
 
-function notificationRender(message_type, message_text, fileName, userEmail = 'user@user.com') {
+function notificationRender(message_type, message_text, fileName, user = { email : 'user@user.com'}) {
     const layout = `<head>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                     <meta charset="utf-8" />
@@ -33,6 +33,7 @@ function notificationRender(message_type, message_text, fileName, userEmail = 'u
                             <title>Settings</title>
                             <link rel="stylesheet" href="css/settings.css">
                             <link rel="stylesheet" href="css/footer.css">
+                            <link rel="stylesheet" href="css/homepage-error.css">
                             </head>`
 
     const layoutHomepage = `<!DOCTYPE html>
@@ -46,6 +47,20 @@ function notificationRender(message_type, message_text, fileName, userEmail = 'u
                             <link rel="stylesheet" href=css/homepage-spinner.css />
                             
                             <title>Home-Page</title>
+                            </head>`
+
+    const layoutSellerHomepage = `<!DOCTYPE html>
+                            <html lang="en">
+                            
+                            <head>
+                            <meta charset="UTF-8" />
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                            <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                            <link rel="stylesheet" href="css/seller-homepage.css" />
+                            <link rel="stylesheet" href="css/homepage-error.css" />
+                            <link rel="stylesheet" href="css/spinner.css" />
+                            
+                            <title>The Monk Store-Seller Page</title>
                             </head>`
 
     if (message_type) {
@@ -192,14 +207,16 @@ function notificationRender(message_type, message_text, fileName, userEmail = 'u
 
     if (fileName == 'settings'){
         let settings = layoutSettings + `<body>
-                                            <div class="notification" style="background-color: ${message_color};">${message}</div>
+                                            <div class="notification">
+                                            <div class="notification-container" style="background-color: ${message_color};">${message}</div>
+                                            </div>
                                             <script>
                                             let div = document.getElementsByClassName('notification')[0]
                                             setTimeout(() => {
                                                 div.style.animation = "slideBackToTop 250ms ease-in"
                                                 setTimeout(() => {
                                                 div.style["background-color"] = ""
-                                                div.style.color = "#ffffff"
+                                                div.style.color = "transparent"
                                                 setTimeout(() => {
                                                     div.remove()
                                                 }, 100);
@@ -221,29 +238,30 @@ function notificationRender(message_type, message_text, fileName, userEmail = 'u
                                                 <h2>Settings</h2>
                                                 <img class="avatar" src="icons/profile_avatar.png" alt="">
                                                 <div class="form">
-                                                <form>
+                                                <form action="/settings" method="POST">
                                                     <div class="field">
-                                                    <form for="">Email-ID</form>
-                                                    <input class="full_name" type="text" name="full-name"/>
+                                                    <label for="email">Email-ID</label>
+                                                    <div class="full_name">${user.email}</div>
                                                     </div>
                                                     <div class="field">
-                                                    <form for="">Mobile Number</form>
-                                                    <input class="full_name" type="text" name="full-name"/>
+                                                    <label for="phoneNumber">Mobile Number</label>
+                                                    <input class="full_name" type="text" name="phoneNumber" value=${user.phonenumber} />
                                                     </div>
                                                     <div class="field">
-                                                    <form for="">Gender</form>
-                                                    <input class="full_name" type="text" name="full-name"/>
+                                                    <label for="gender">Gender</label>
+                                                    <input class="full_name" type="text" name="gender" value="${user.gender}"/>
                                                     </div>
                                                     <div class="field">
-                                                    <form for="">Address</form>
-                                                    <input class="full_name" type="text" name="full-name"/>
-                                                    </div>
-                                                </form>
+                                                    <label for="address">Address</label>
+                                                    <input class="full_name" type="text" name="address" value="${user.address}"/>
+                                                
                                                 </div>
                                                 <div class="bottom">
-                                                <a href="#"><button class="button_left" type="submit" name="button">Save Changes</button></a>
-                                                <a href="/homepage"><button class="button_right" type="cancel" name="button">Cancel</button></a>
+                                                <button class="button_left" type="submit" name="button">Save Changes</button>
+                                                <a href="/homepage"><div class="button_right" style="display: inline-block; width: 30%; padding: 14px; text-align: center;" name="button">Cancel</div></a>
                                                 </div>
+                                                </form>
+                                            </div>
                                             </div>
                                             </div>
                                             <p class="copyright">&copy Copyrights. All rights reservered, 2021</p>
@@ -298,7 +316,7 @@ function notificationRender(message_type, message_text, fileName, userEmail = 'u
                                                 autofocus
                                                 placeholder="Password"
                                                 name="emailToken"
-                                                value="${userEmail}"
+                                                value="${user.email}"
                                                 />
                                                 <div class="form__input-error-message"></div>
                                             </div>
@@ -405,7 +423,7 @@ function notificationRender(message_type, message_text, fileName, userEmail = 'u
                                                         </li>
                                         
                                                         <li class="nav__item">
-                                                        <a href="#feedback" class="nav__link scroll-link">Add Cart</a>
+                                                        <a href="/cart" class="nav__link scroll-link">Cart History</a>
                                                         </li>
                                         
                                                         <li class="nav__item">
@@ -709,9 +727,192 @@ function notificationRender(message_type, message_text, fileName, userEmail = 'u
                                         </body>`
         return homepage
     }
+
+    if (fileName == 'seller-homepage'){
+        let sellerHomepage = layoutSellerHomepage + `<body>
+
+        <div class="notification">
+        <div class="notification-container" style="background-color: ${message_color};">${message}</div>
+        </div>
+        <script>
+        let div = document.getElementsByClassName('notification')[0]
+        setTimeout(() => {
+            div.style.animation = "slideBackToTop 250ms ease-in"
+            setTimeout(() => {
+            div.style["background-color"] = ""
+            div.style.color = "transparent"
+            setTimeout(() => {
+                div.remove()
+            }, 100);
+            }, 250);
+        }, 5000);
+        </script>
+
+        <header id="header" class="header">
+      
+          <!-- Navigation -->
+          
+          <div class="navigation">
+            <div class="container">
+              <nav class="nav__center">
+                <div class="nav__header">
+                  <div class="nav__logo">
+                   <a href="/homepage"><img src="svg/The-Monk-store.svg"></a>
+                  </div>
+                    <div class="nav__hamburger">
+                    <span>
+                      <svg>
+                        <use xlink:href="./images/sprite.svg#icon-menu"></use>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+      
+                <div class="nav__menu">
+                  <div class="menu__top">
+                    <h1 class="nav__category">Monk<span>Store</span></h1>
+                    <div class="close__toggle">
+                      <svg>
+                        <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                      </svg>
+                    </div>
+                  </div>
+                  <ul class="nav__list">
+                    <li class="nav__item">
+                      <a href="/seller" class="nav__link scroll-link">Home</a>
+                    </li>
+      
+                    <li class="nav__item">
+                      <a href="/seller-product" class="nav__link scroll-link">Products</a>
+                    </li>
+      
+                    <li class="nav__item">
+                      <a href="/logout" class="nav__link scroll-link">Log Out</a>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
+          </div>
+      
+          <!-- Hero -->
+          <div class="hero">
+            <div class="hero__content container">
+              <a href="#" class="btn btn-hero">Sell you Products</a>
+            </div>
+      
+            <a href="#new__arrival" class="goto__next scroll-link">
+            </a>
+          </div>
+        </header>
+        <main>
+          
+         <section>
+              <div class="card">
+      
+                 <div class="container">
+        <div class="title-form">
+          <h1>Product Details</h1>
+        </div>
+        <form class="price-form" action="/add-product" method="POST">
+        ${homepageSpinner}
+
+          <div class="field-form">
+            <input type="text" name="name" class="first-name" placeholder="Product name">
+          </div>
+          <div class="field-form">
+            <input type="text" name="price" class="student-id" placeholder="Price">
+          </div>
+          
+          <div class="field-form category form">
+            <span style="margin-right: 10px;">Category</span>
+              <select name="category" id="category select">
+                <option value="00">Laptop</option>
+                <option value="01">Smartphone</option>
+                <option value="02">Storage</option>
+              </select>  
+          </div>
+      
+          <div class="field-form description">
+            <textarea name="description" id="description" placeholder="Description"></textarea>
+            </div>
+          
+          <div class="field-form button">
+            <button type="submit" class="add spinner-btn" value="Add">Add Products</button>
+          </div>
+        </form>
+      </div>
+      
+                
+          <!-- Footer -->
+          <footer id="footer" class="section footer">
+            <div class="container">
+              <div class="footer__top">
+                <div class="footer-top__box">
+                  <h3>EXTRAS</h3>
+                  <a href="#">Brands</a>
+                  <a href="#">Gift Cards</a>
+                  <a href="#">Specials</a>
+                  <a href="#">Support</a>
+                </div>
+                <div class="footer-top__box">
+                  <h3>INFORMATION</h3>
+                  <a href="#">About Us</a>
+                  <a href="#">Privacy Policy</a>
+                  <a href="#">Terms & Conditions</a>
+                  <a href="#">Contact Us</a>
+                </div>
+      
+                <div class="footer-top__box">
+                  <h3>MY ACCOUNT</h3>
+                  <a href="#">My Account</a>
+                  <a href="#">Order History</a>
+                  <a href="#">Cart</a>
+                  <a href="#">FeedBack</a>
+                  <a href="#">Returns</a>
+                </div>
+                <div class="footer-top__box">
+                  <h3>CONTACT US</h3>
+                  <div>
+                   B8-Jabalpur, 482002
+                  </div>
+                  <div>
+                    keplons@outlook.com
+                  </div>
+                  <div>
+                   +91-9878881179
+                  </div>
+                  <div>
+                   Madhya Pradesh, India.
+                  </div>
+                </div>
+                <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+                  <strong>
+                    <a href="#">The Monk Store.Inc</a>
+                  </strong>
+                </div>
+              </div>
+            </div>
+            </div>
+          </footer>
+          <!-- End Footer -->
+        </main>
+      </body>
+      
+      </html>`
+      return sellerHomepage
+    }
 }
 
 const pageRender = (user, page)=>{
+
+    const layoutLandingPage = `<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Landing-Page|The Monk Store</title>
+        <link rel="stylesheet" href="/css/landing.css">
+    </head>`
 
     const layoutHomepage = `<!DOCTYPE html>
                             
@@ -724,6 +925,19 @@ const pageRender = (user, page)=>{
                             
                             <title>Home-Page</title>
                             </head>`
+
+    const layoutSellerHomepage = `<!DOCTYPE html>
+                                    <html lang="en">
+                                    
+                                    <head>
+                                    <meta charset="UTF-8" />
+                                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                                    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                                    <link rel="stylesheet" href="css/seller-homepage.css" />
+                                    <link rel="stylesheet" href="css/spinner.css" />
+                                    
+                                    <title>The Monk Store-Seller Page</title>
+                                    </head>`
 
     const layoutFeedback = `<!DOCTYPE html>
                             <head>
@@ -842,6 +1056,50 @@ const pageRender = (user, page)=>{
                         <title>Laptops</title>
                         </head>`
 
+    if (page == 'landing'){
+        let landing = layoutLandingPage + `<body>
+        <main class="container">
+          <section class="content-wrapper">
+            <div class="main-content">
+              <div class="topnav">
+                <a href="#home" class="nav-links first"> 
+                  <img src="/svg/The-Monk-store.svg" alt="" width="200px" height="150px">
+                </a>
+               </div>
+              <div class="info">
+                <div class="circle1"></div>
+                <div class="circle2"></div>
+                <div class="strengths">
+                  <p class="salutation">Hey !!</p>
+                  <p class="job" style="margin-bottom: 20px;">    
+                    Welcome to THE MONK STORE. 
+                    <span class="orange-color">
+                    We thank you for chosing us as your shopping mate.</span>
+                  </p>
+                  <p class="qualities">Hope you enjoy this experience of diving into the world of gadgets.</p>
+                  <div class="buttons-wrapper">
+                    <a href="/login"><button class="transparent-button">Continue...</button></a> 
+                  </div> <br>
+                  <div class="hand-right-wrapper">
+                    <img src="/images/Dark-white-in-Jacket5.png" alt="" class="hand-right">
+                  </div>
+                  <div class="hand-up-wrapper">
+                    <img src="/images/Dark-white-in-Jacket4.png" alt="" class="hand-up">
+                  </div>
+                </div>
+                <div class="picture">
+                  <img src="/svg/2.svg" alt="" class="pose-pic">
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+        
+    </body>
+    </html>`
+    return landing
+    }
+    
     if (page == 'homepage'){
 
         let sellerURL
@@ -899,7 +1157,7 @@ const pageRender = (user, page)=>{
                                                         </li>
                                         
                                                         <li class="nav__item">
-                                                        <a href="#feedback" class="nav__link scroll-link">Add Cart</a>
+                                                        <a href="/cart" class="nav__link scroll-link">Cart History</a>
                                                         </li>
                                         
                                                         <li class="nav__item">
@@ -1202,6 +1460,165 @@ const pageRender = (user, page)=>{
                                         </body>`
         return homepage
     }     
+
+    if (page == 'seller-homepage'){
+        let sellerHomepage = layoutSellerHomepage + `<body>
+
+        <header id="header" class="header">
+    
+        <!-- Navigation -->
+        
+        <div class="navigation">
+            <div class="container">
+            <nav class="nav__center">
+                <div class="nav__header">
+                <div class="nav__logo">
+                <a href="/homepage"><img src="svg/The-Monk-store.svg"></a>
+                </div>
+                    <div class="nav__hamburger">
+                    <span>
+                    <svg>
+                        <use xlink:href="./images/sprite.svg#icon-menu"></use>
+                    </svg>
+                    </span>
+                </div>
+                </div>
+    
+                <div class="nav__menu">
+                <div class="menu__top">
+                    <h1 class="nav__category">Monk<span>Store</span></h1>
+                    <div class="close__toggle">
+                    <svg>
+                        <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                    </svg>
+                    </div>
+                </div>
+                <ul class="nav__list">
+                    <li class="nav__item">
+                    <a href="/seller" class="nav__link scroll-link">Home</a>
+                    </li>
+    
+                    <li class="nav__item">
+                    <a href="/seller-product" class="nav__link scroll-link">Products</a>
+                    </li>
+    
+                    <li class="nav__item">
+                    <a href="/logout" class="nav__link scroll-link">Log Out</a>
+                    </li>
+                </ul>
+                </div>
+            </nav>
+            </div>
+        </div>
+    
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero__content container">
+            <a href="#" class="btn btn-hero">Sell you Products</a>
+            </div>
+    
+            <a href="#new__arrival" class="goto__next scroll-link">
+            </a>
+        </div>
+        </header>
+        <main>
+        
+        <section>
+            <div class="card">
+    
+                <div class="container">
+        <div class="title-form">
+        <h1>Product Details</h1>
+        </div>
+        <form class="price-form" action="/add-product" method="POST">
+        ${homepageSpinner}
+
+        <div class="field-form">
+            <input type="text" name="name" class="first-name" placeholder="Product name">
+        </div>
+        <div class="field-form">
+            <input type="text" name="price" class="student-id" placeholder="Price">
+        </div>
+        
+        <div class="field-form category form">
+            <span style="margin-right: 10px;">Category</span>
+            <select name="category" id="category select">
+                <option value="00">Laptop</option>
+                <option value="01">Smartphone</option>
+                <option value="02">Storage</option>
+            </select>  
+        </div>
+    
+        <div class="field-form description">
+            <textarea name="description" id="description" placeholder="Description"></textarea>
+            </div>
+        
+        <div class="field-form button">
+            <button type="submit" class="add spinner-btn" value="Add">Add Products</button>
+        </div>
+        </form>
+    </div>
+    
+                
+        <!-- Footer -->
+        <footer id="footer" class="section footer">
+            <div class="container">
+            <div class="footer__top">
+                <div class="footer-top__box">
+                <h3>EXTRAS</h3>
+                <a href="#">Brands</a>
+                <a href="#">Gift Cards</a>
+                <a href="#">Specials</a>
+                <a href="#">Support</a>
+                </div>
+                <div class="footer-top__box">
+                <h3>INFORMATION</h3>
+                <a href="#">About Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Contact Us</a>
+                </div>
+    
+                <div class="footer-top__box">
+                <h3>MY ACCOUNT</h3>
+                <a href="#">My Account</a>
+                <a href="#">Order History</a>
+                <a href="#">Cart</a>
+                <a href="#">FeedBack</a>
+                <a href="#">Returns</a>
+                </div>
+                <div class="footer-top__box">
+                <h3>CONTACT US</h3>
+                <div>
+                B8-Jabalpur, 482002
+                </div>
+                <div>
+                    keplons@outlook.com
+                </div>
+                <div>
+                +91-9878881179
+                </div>
+                <div>
+                Madhya Pradesh, India.
+                </div>
+                </div>
+                <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+                <strong>
+                    <a href="#">The Monk Store.Inc</a>
+                </strong>
+                </div>
+            </div>
+            </div>
+            </div>
+        </footer>
+        <!-- End Footer -->
+        </main>
+    </body>
+    
+    </html>`
+
+      return sellerHomepage
+    }
     
     if (page == 'feedback'){
         let feedback = layoutFeedback + `<body>
@@ -1514,6 +1931,7 @@ const pageRender = (user, page)=>{
     }
 
     if(page == 'settings'){
+        console.log(user)
         let settings = layoutSettings + `<body>
                                             <div class="wrapper">
                                             <div class="left">
@@ -1530,29 +1948,31 @@ const pageRender = (user, page)=>{
                                                 <h2>Settings</h2>
                                                 <img class="avatar" src="icons/profile_avatar.png" alt="">
                                                 <div class="form">
-                                                <form>
+                                                <form action="/settings" method="POST">
                                                     <div class="field">
-                                                    <form for="email">Email-ID</form>
-                                                    <input class="full_name" type="email" name="email" value="${user.email}"/>
+                                                    <label>Email-ID</label>
+                                                    <div class="full_name">${user.email}</div>
                                                     </div>
                                                     <div class="field">
-                                                    <form for="phoneNumber">Mobile Number</form>
-                                                    <input class="full_name" type="text" name="phoneNumber" value="${user.phoneNumber}"/>
+                                                    <label for="phoneNumber">Mobile Number</label>
+                                                    <input class="full_name" type="text" name="phoneNumber" value="${user.phonenumber}"/>
                                                     </div>
                                                     <div class="field">
-                                                    <form for="gender">Gender</form>
+                                                    <label for="gender">Gender</label>
                                                     <input class="full_name" type="text" name="gender" value="${user.gender}"/>
                                                     </div>
                                                     <div class="field">
-                                                    <form for="address">Address</form>
+                                                    <label for="address">Address</label>
                                                     <input class="full_name" type="text" name="address" value="${user.address}"/>
                                                     </div>
+                                                
+                                                    
+                                                    <div class="bottom">
+                                                    <button class="button_left" type="submit" name="button">Save Changes</button>
+                                                    <a href="/homepage"><div class="button_right" style="display: inline-block; width: 30%; padding: 14px; text-align: center;" name="button">Cancel</div></a>
+                                                    </div>
                                                 </form>
-                                                </div>
-                                                <div class="bottom">
-                                                <a href="#"><button class="button_left" type="submit" name="button">Save Changes</button></a>
-                                                <a href="/homepage"><button class="button_right" type="cancel" name="button">Cancel</button></a>
-                                                </div>
+                                            </div>
                                             </div>
                                             </div>
                                             <p class="copyright">&copy Copyrights. All rights reservered, 2021</p>
@@ -1676,6 +2096,8 @@ const productRender ={
     smartphoneRender: smartphoneRender,
     storageRender: storageRender,
     orderHistoryRender: orderHistoryRender,
+    sellerProductRender: sellerProductRender,
+    cartHistoryRender: cartHistoryRender,
     productView: productView
 }
 
@@ -1728,12 +2150,18 @@ async function laptopRender(){
                                     <circle cx="46" cy="22" r="16"></circle>
                                     <path d="M53 18l-8 9-5-5"></path>
                                     </svg>
+                                    <form action="/product-view" method="GET">
+                                    <input type="hidden" name="id" value="${result.rows[i].id}">
+                                    <input type="hidden" name="category" value="${result.rows[i].category}">
+                                    <button type="submit">
                                     <svg class="outCart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                                     <title>Agregar al carrito</title>
                                     <path d="M2 6h10l10 40h32l8-24H16"></path>
                                     <circle cx="23" cy="54" r="4"></circle>
                                     <circle cx="49" cy="54" r="4"></circle>
                                     </svg>
+                                    </button>
+                                    </form>
                                 </div>
                                 </div>
                             </div>
@@ -1864,12 +2292,18 @@ async function smartphoneRender(){
                                     <circle cx="46" cy="22" r="16"></circle>
                                     <path d="M53 18l-8 9-5-5"></path>
                                     </svg>
+                                    <form action="/product-view" method="GET">
+                                    <input type="hidden" name="id" value="${result.rows[i].id}">
+                                    <input type="hidden" name="category" value="${result.rows[i].category}">
+                                    <button type="submit">
                                     <svg class="outCart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                                     <title>Agregar al carrito</title>
                                     <path d="M2 6h10l10 40h32l8-24H16"></path>
                                     <circle cx="23" cy="54" r="4"></circle>
                                     <circle cx="49" cy="54" r="4"></circle>
                                     </svg>
+                                    </button>
+                                    </form>
                                 </div>
                                 </div>
                             </div>
@@ -2000,12 +2434,18 @@ async function storageRender(){
                                     <circle cx="46" cy="22" r="16"></circle>
                                     <path d="M53 18l-8 9-5-5"></path>
                                     </svg>
+                                    <form action="/product-view" method="GET">
+                                    <input type="hidden" name="id" value="${result.rows[i].id}">
+                                    <input type="hidden" name="category" value="${result.rows[i].category}">
+                                    <button type="submit">
                                     <svg class="outCart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                                     <title>Agregar al carrito</title>
                                     <path d="M2 6h10l10 40h32l8-24H16"></path>
                                     <circle cx="23" cy="54" r="4"></circle>
                                     <circle cx="49" cy="54" r="4"></circle>
                                     </svg>
+                                    </button>
+                                    </form>
                                 </div>
                                 </div>
                             </div>
@@ -2139,7 +2579,7 @@ async function orderHistoryRender(user){
             sum += number
             
         }
-        let gst = sum*(0.05)
+        let gst = (sum*(0.05)).toFixed(2)
         let orderHistory = layoutOrderHistory + `<body>
                                                     <div class="container">
                                                     
@@ -2158,8 +2598,8 @@ async function orderHistoryRender(user){
                                                     <div class="row order_sorter">
                                                         <ul id="toggle-orders">
                                                         <li class="first"></li>
-                                                        <li class="oh selected"><a href="#">Order History</a></li>
-                                                        <li class="fo"><a href="#">Cart Deck</a></li>
+                                                        <li class="oh selected"><a href="/order-history">Order History</a></li>
+                                                        <li class="fo"><a href="/cart">Cart Deck</a></li>
                                                         </ul>
                                                     </div>
                                                     
@@ -2177,6 +2617,199 @@ async function orderHistoryRender(user){
                                                         <div class="total_gst">
                                                             <h2>Rs. ${gst}</h2>
                                                             <h3>Total GST Paid</h3>
+                                                        </div>
+                                                        <div class="ytd-orders">
+                                                            <h2>0</h2>
+                                                            <h3>Refund Request</h3>
+                                                        </div>
+                                                        </div>
+                                                            ${orderedProduct}
+                                                    </div>      
+                                                    </div>
+                                                    <p class="copyright">&copy Copyrights. All rights reservered, 2021</p>  
+                                                    </body>`
+
+        return orderHistory
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+async function sellerProductRender(user){
+    const layoutOrderHistory = `<!DOCTYPE html>
+    <html lang="en" >
+    <head>
+      <meta charset="UTF-8">
+      <title>Product Sold/The-Monk-Store</title>
+    <link rel="stylesheet" href="/css/product-sold.css">
+    
+    </head>`
+    let orderedProduct = ``
+    let sum = 0
+
+    try{
+        const result = await pool.query(`SELECT * FROM products WHERE seller = $1`, [user.email])
+        for (let i = 0; i < result.rows.length; i++) {
+            
+            let orderImageUrl
+
+            if(result.rows[i].category == 'laptop') orderImageUrl = 'https://images-na.ssl-images-amazon.com/images/I/61pwrivrfUS._SL1500_.jpg'
+            else if(result.rows[i].category == 'smartphone') orderImageUrl = 'https://images-eu.ssl-images-amazon.com/images/I/31Qy4Tf82UL._SX300_SY300_QL70_FMwebp_.jpg'
+            else orderImageUrl = 'https://images-eu.ssl-images-amazon.com/images/I/41RbYlMPpBL._SX300_SY300_QL70_FMwebp_.jpg'
+
+            orderedProduct += `    <div class="order-container">
+                                    <div class="header">
+                                    <div class="row">
+                                        <div class="col-2"><span>TOTAL</span><span>Rs. ${result.rows[i].price}/-</span></div>
+                                    </div>
+                                    </div>
+                                    <div class="box">
+                                    <div class="row">
+                                        <div class="col-1">
+                                        <img src=${orderImageUrl} alt="">
+                                        </div>
+                                        <div class="col-2">
+                                        <span class="product-title">Product Name: ${result.rows[i].name}</span>
+                                        <span class="product-title">Product Description: ${result.rows[i].description}</span>
+                                        <form action="/remove-seller-product" method="POST">
+                                        <input type="hidden" name="id" value=${result.rows[i].id} />
+                                        <button type="submit" class="btn-default"><i class="fa fa-repeat" aria-hidden="true"></i> Remove</button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    </div>
+                                </div>`
+            
+        }
+        let orderHistory = layoutOrderHistory + `<body>
+                                                <div class="container">
+                                                
+                                                <div class="row">
+                                                    <div class="order-tittle">
+                                                    <a href="/seller"><img src="/svg/The-Monk-store.svg" height="80px" width="250px"></a>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="row title-row">
+                                                    <div class="page-title">
+                                                    <h1>Product Sold</h1>
+                                                    </div>
+                                                </div>  
+                                                
+                                                <div class="row order_sorter">
+                                                    <ul id="toggle-orders">
+                                                    <li class="first"></li>
+                                                    <li class="oh selected"><a href="#">Products List</a></li>
+                                                    </ul>
+                                                </div>
+                                                
+                                                <div class="row" id="order-history">
+                                                    ${orderedProduct}
+                                                <p class="copyright">&copy Copyrights. All rights reservered, 2021</p>   
+                                                </div>      
+                                                </div>
+                                                </body>
+                                                </html>`
+
+        return orderHistory
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+async function cartHistoryRender(user){
+    const layoutOrderHistory = `<!DOCTYPE html>
+    <head>
+    <meta charset="UTF-8">
+    <title>The Monk Store</title>
+    <link rel="stylesheet" href="css/order-history.css">
+    <link rel="stylesheet" href="css/footer.css">
+    </head>`
+    let orderedProduct = ``
+    let sum = 0
+
+    try{
+        const result = await pool.query(`SELECT * FROM cart WHERE useremail = $1`, [user.email])
+        for (let i = 0; i < result.rows.length; i++) {
+            
+            let orderImageUrl
+
+            if(result.rows[i].category == 'laptop') orderImageUrl = 'https://images-na.ssl-images-amazon.com/images/I/61pwrivrfUS._SL1500_.jpg'
+            else if(result.rows[i].category == 'smartphone') orderImageUrl = 'https://images-eu.ssl-images-amazon.com/images/I/31Qy4Tf82UL._SX300_SY300_QL70_FMwebp_.jpg'
+            else orderImageUrl = 'https://images-eu.ssl-images-amazon.com/images/I/41RbYlMPpBL._SX300_SY300_QL70_FMwebp_.jpg'
+
+            orderedProduct += `<div class="order-container">
+                                    <div class="header">
+                                        <div class="row">
+                                        <div class="col-1"><span>ADDED ON</span><span>${result.rows[i].date}</span></div>
+                                        <div class="col-2"><span>TOTAL</span><span>Rs. ${result.rows[i].price}/-</span></div>
+                                        <div class="col-3"><span>SHIPING TO</span><span>${user.name}</span></div>
+                                        <div class="col-4"><span>ORDER NUMBER</span><span>XXXXX</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="box"> 
+                                        <div class="row">
+                                        <div class="col-1">
+                                            <img src="${orderImageUrl}" alt="">
+                                        </div>
+                                        <div class="col-2">
+                                            <span class="product-title">${result.rows[i].name}<i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+                                            <p>Total Quantity 01 <br>
+                                            Added on: ${result.rows[i].date} </p>
+                                        <a href="/product-view?id=${result.rows[i].productid}&category=${result.rows[i].category}" class="btn-default"><i class="fa fa-repeat" aria-hidden="true"></i> View Product</a>
+                                        </div>
+                                        <div class="col-3">
+                                        <a href="/product-view?id=${result.rows[i].productid}&category=${result.rows[i].category}" class="btn-default"><i class="fa fa-download" aria-hidden="true"></i> Order Now</a>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>`
+            
+            let number = result.rows[i].price
+            number = parseInt(number.split(',').join(''));
+            sum += number
+            
+        }
+        let gst = (sum*(0.05)).toFixed(2)
+        let orderHistory = layoutOrderHistory + `<body>
+                                                    <div class="container">
+                                                    
+                                                    <div class="row">
+                                                        <div class="order-tittle">
+                                                        <a href="/homepage"><img src="images/the-monk-store-order-history.png" class="main-logo" height="80px" width="250px"><a>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row title-row">
+                                                        <div class="page-title">
+                                                        <h1>Cart History</h1>
+                                                        </div>
+                                                    </div>  
+                                                    
+                                                    <div class="row order_sorter">
+                                                        <ul id="toggle-orders">
+                                                        <li class="first"></li>
+                                                        <li class="oh"><a href="/order-history">Order Deck</a></li>
+                                                        <li class="fo selected"><a href="/cart">Cart Deck</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    
+                                                    <div class="row" id="order-history">
+                                                    
+                                                        <div class="row order-summary">
+                                                        <div class="totalspent-orders">
+                                                            <h2>Rs. ${sum}</h2>
+                                                            <h3>Cart Value</h3>
+                                                        </div>
+                                                        <div class="printqty-orders">
+                                                            <h2>${result.rows.length}</h2>
+                                                            <h3>Total Items</h3>
+                                                        </div>
+                                                        <div class="total_gst">
+                                                            <h2>Rs. ${gst}</h2>
+                                                            <h3>Total GST of cart value</h3>
                                                         </div>
                                                         <div class="ytd-orders">
                                                             <h2>0</h2>
@@ -2343,6 +2976,12 @@ async function productView(message_type, message_text, user, product){
                                         <input type="hidden" name="category" value="${result.rows[0].category}">
                                         <button type="submit" class="btn wishlist spinner-btn">Buy Now</button>
                                         </form>
+                                        <form action="/add-cart" method="POST">
+                                        <input type="hidden" name="id" value="${result.rows[0].id}">
+                                        <input type="hidden" name="category" value="${result.rows[0].category}">
+                                        <button type="submit" class="btn wishlist spinner-btn">Add To Cart</button>
+                                        </form>
+                                        
                                     </div>
                                 </div>
                                 ${homepageSpinner}
@@ -2419,6 +3058,8 @@ async function productView(message_type, message_text, user, product){
     }
     
 }
+
+
 
 module.exports = {
     notificationRender, 

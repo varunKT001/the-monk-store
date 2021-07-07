@@ -3,7 +3,8 @@ CREATE TABLE products (
     name VARCHAR(100) NOT NULL, 
     price VARCHAR(50) NOT NULL,
     category VARCHAR(20) NOT NULL, 
-    description VARCHAR(300) NOT NULL
+    description VARCHAR(300) NOT NULL,
+    seller VARCHAR(100)
 );
 
 INSERT INTO products (name, price, category, description) VALUES ('MSI GE66 Raider', '2,23,990', 'laptop', 'Display size 15.60-inch , Display resolution 2560x1440 pixels , Core i7 11th gen , Windows 10 home , 16 GB RAM , 1TB SSD , 1 TB HDD , Nvidia 8 GB graphics.' );
