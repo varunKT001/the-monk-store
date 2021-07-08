@@ -95,3 +95,8 @@ Or can use the node command:
 `$ node server.js`
 
 The user can open the app by entering the site url in the browser and use the app.
+
+## Team Members
+1. Ansh Rusia (2020IMT-012)
+2. Shubhajeet Pradhan (2020IMT-097)
+3. Varun Kumar Tiwari (2020IMT-112)
