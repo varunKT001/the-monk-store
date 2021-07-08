@@ -8,7 +8,6 @@
     "cookie-parser": "^1.4.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "express-jwt": "^6.0.0",
     "express-session": "^1.17.2",
     "jsonwebtoken": "^8.5.1",
     "nodemailer": "^6.6.2",

@@ -2791,7 +2791,7 @@ async function cartHistoryRender(user){
                                                     <div class="row order_sorter">
                                                         <ul id="toggle-orders">
                                                         <li class="first"></li>
-                                                        <li class="oh"><a href="/order-history">Order Deck</a></li>
+                                                        <li class="oh"><a href="/order-history">Order History</a></li>
                                                         <li class="fo selected"><a href="/cart">Cart Deck</a></li>
                                                         </ul>
                                                     </div>

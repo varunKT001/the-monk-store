@@ -877,6 +877,19 @@ app.post('/add-product', checkAuthorization, async (req, res)=>{
         description: req.body.description
     }
 
+    if (!product.name){
+        req.flash('emsg', 'Add a product Name!')
+        return res.redirect('/seller')
+    }
+    if (!product.price){
+        req.flash('emsg', 'Add product price!')
+        return res.redirect('/seller')
+    }
+    if (!product.description){
+        req.flash('emsg', 'Write a description!')
+        return res.redirect('/seller')
+    }
+
     let success = await addProductHelper(product, req.user)
     if(success.val){
         req.flash('msg', 'Product Added Successfully!')
