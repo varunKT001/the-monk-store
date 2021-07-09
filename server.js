@@ -512,16 +512,16 @@ app.post('/account/password-reset', (req, res)=>{
     }
 
     if(!newCredentials.password){
-        return res.send(notificationRender(false, 'Enter a Password!', 'password-reset'))
+        return res.send(notificationRender(false, 'Enter a Password!', 'password-reset', newCredentials.userToken))
     }
     if(newCredentials.password != req.body.confirmPassword){
-        return res.send(notificationRender(false, 'Passwords not matching!', 'password-reset'))
+        return res.send(notificationRender(false, 'Passwords not matching!', 'password-reset', newCredentials.userToken))
     }
     if(newCredentials.password.length < 8){
-        return res.send(notificationRender(false, 'Password must be of atleast 8 characters!', 'password-reset'))
+        return res.send(notificationRender(false, 'Password must be of atleast 8 characters!', 'password-reset', newCredentials.userToken))
     }
     if(! /\d/.test(newCredentials.password)){
-        return res.send(notificationRender(false, 'Password must contain a number!', 'password-reset'))
+        return res.send(notificationRender(false, 'Password must contain a number!', 'password-reset', newCredentials.userToken))
     }
 
 
