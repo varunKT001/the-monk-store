@@ -511,6 +511,19 @@ app.post('/account/password-reset', (req, res)=>{
         userToken: req.body.userToken
     }
 
+    if(!newCredentials.password){
+        return res.send(notificationRender(false, 'Enter a Password!', 'password-reset'))
+    }
+    if(newCredentials.password != req.body.confirmPassword){
+        return res.send(notificationRender(false, 'Passwords not matching!', 'password-reset'))
+    }
+    if(newCredentials.password.length < 8){
+        return res.send(notificationRender(false, 'Password must be of atleast 8 characters!', 'password-reset'))
+    }
+    if(! /\d/.test(newCredentials.password)){
+        return res.send(notificationRender(false, 'Password must contain a number!', 'password-reset'))
+    }
+
 
     /*---------- VERIFYING THE JWT TOKEN SENT TO USER'S EMAIL ----------*/
     /*---------- IF VERIFIED: THE USER CAN ENTER A NEW PASSWORD AND LOGIN USING SAME ----------*/

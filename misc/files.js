@@ -22,8 +22,8 @@ function notificationRender(message_type, message_text, fileName, user = { email
                     <title>Login / Sign Up Form</title>
                     <link rel="preconnect" href="https://fonts.gstatic.com">
                     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-                    <link rel="stylesheet" href="css/authentication.css" />
-                    <link rel="stylesheet" href="css/error.css">
+                    <link rel="stylesheet" href="/css/authentication.css" />
+                    <link rel="stylesheet" href="/css/error.css">
                     <link rel="stylesheet" href=${loaderCSS} />
                     </head>`
 
@@ -203,6 +203,67 @@ function notificationRender(message_type, message_text, fileName, user = { email
                                             ${spinner}
                                         </body>`
     return forgotPasswordEmail
+    }
+
+    if(fileName == 'password-reset'){
+        let passwordReset = layout + `<body>
+                                        <div class="notification" style="background-color: ${message_color};">${message}</div>
+                                                    <script>
+                                                    let div = document.getElementsByClassName('notification')[0]
+                                                    setTimeout(() => {
+                                                        div.style.animation = "slideBackToTop 250ms ease-in"
+                                                        setTimeout(() => {
+                                                        div.style["background-color"] = ""
+                                                        div.style.color = "#ffffff"
+                                                        setTimeout(() => {
+                                                            div.remove()
+                                                        }, 100);
+                                                        }, 250);
+                                                    }, 5000);
+                                                    </script>
+                                                    <div class="container">
+                                                    <form class="form" id="login" method="POST" action="/account/password-reset">
+                                                        <img class="brand-logo" src="/icons/3.png" alt="" />
+                                                        <h1 class="form__title">Password Reset</h1>
+                                                        <div class="form__message form__message--error"></div>
+                                                        <div class="form__input-group">
+                                                        <input
+                                                            type="password"
+                                                            class="form__input"
+                                                            autofocus
+                                                            placeholder="password"
+                                                            name="password"
+                                                        />
+                                                        <div class="form__input-error-message"></div>
+                                                        </div>
+                                                        <div class="form__input-group">
+                                                        <input
+                                                            type="password"
+                                                            class="form__input"
+                                                            autofocus
+                                                            placeholder="Confirm password"
+                                                            name="confirmPassword"
+                                                        />
+                                                        <div class="form__input-error-message"></div>
+                                                        </div>
+                                                        <div class="form__input-group">
+                                                        <input
+                                                            type="hidden"
+                                                            class="form__input"
+                                                            autofocus
+                                                            placeholder=""
+                                                            name="userToken"
+                                                            value="${user}"
+                                                        />
+                                                        <div class="form__input-error-message"></div>
+                                                        </div>
+                                                        <button class="form__button" type="submit">Reset</button>
+                                                    </form>
+                                                    </div>
+                                                    ${spinner}
+                                                </body>
+                                                `
+    return passwordReset
     }
 
     if (fileName == 'settings'){
