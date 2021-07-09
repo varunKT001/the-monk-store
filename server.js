@@ -588,10 +588,10 @@ app.get('/logout', checkAuthorization, (req, res)=>{
 app.get('/homepage', checkAuthorization, (req, res)=>{
     const message = req.flash()
     if(message.msg){
-        return res.send(notificationRender(true, message.msg, 'homepage'))
+        return res.send(notificationRender(true, message.msg, 'homepage', req.user))
     }
     if(message.emsg){
-        return res.send(notificationRender(false, message.emsg, 'homepage'))
+        return res.send(notificationRender(false, message.emsg, 'homepage', req.user))
     }
     else{
         return res.send(pageRender(req.user, 'homepage'))
