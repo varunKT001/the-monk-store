@@ -2159,7 +2159,9 @@ const productRender ={
     orderHistoryRender: orderHistoryRender,
     sellerProductRender: sellerProductRender,
     cartHistoryRender: cartHistoryRender,
-    productView: productView
+    productView: productView,
+    reviewRender: reviewRender,
+    aboutSellerRender: aboutSellerRender
 }
 
 async function laptopRender(){
@@ -2929,6 +2931,9 @@ async function productView(message_type, message_text, user, product){
             else if(details.category == 'smartphone') {orderImageUrl = 'https://images-eu.ssl-images-amazon.com/images/I/31Qy4Tf82UL._SX300_SY300_QL70_FMwebp_.jpg' ; width = '25%'}
             else {orderImageUrl = 'https://images-eu.ssl-images-amazon.com/images/I/41RbYlMPpBL._SX300_SY300_QL70_FMwebp_.jpg'; width = '35%'}
 
+            let url1 = `/product-view?id=${result.rows[0].id}&category=${result.rows[0].category}`
+            let url2 = `/review?id=${result.rows[0].id}&category=${result.rows[0].category}`
+            let url3 = `/about-seller?id=${result.rows[0].id}&category=${result.rows[0].category}`
             let productView = layoutProductView + `<body>
                             <div class="notification">
                             <div class="notification-container" style="background-color: ${message_color};">${message}</div>
@@ -3019,9 +3024,9 @@ async function productView(message_type, message_text, user, product){
                                     </div>
                                     <div class="desc-content">
                                         <div class="desc-nav">
-                                            <span>Description</span>
-                                            <span>Reviews</span>
-                                            <span>About</span>
+                                            <span><a href="${url1}">Description</a></span>
+                                            <span><a href="${url2}">Reviews</a></span>
+                                            <span><a href="${url3}">About</a></span>
                                         </div>
                                         <p>${details.description}</p>
                                     </div>
@@ -3120,6 +3125,458 @@ async function productView(message_type, message_text, user, product){
     
 }
 
+async function reviewRender(message_type, message_text, user, product){
+    if (message_type) {
+        message_color = 'lightgreen'
+    }
+    else if (message_type == '') {
+        message_color = 'transparent'
+    }
+    else{
+        message_color = '#ff7271'
+    }
+
+    message = message_text
+    let reviews = ``
+
+    layoutProductView = `<!DOCTYPE html>
+                        <head>
+                        <meta charset="UTF-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+                        <link rel="stylesheet" href="css/product-view.css" />
+                        <link rel="stylesheet" href="css/review.css" />
+                        <link rel="stylesheet" href="css/spinner.css" />
+                        <link rel="stylesheet" href="css/homepage-error.css" />
+                        
+                        <title>The Monk Store-Product View</title>
+                        </head>`
+
+    try{
+        let result = await pool.query(`SELECT * FROM products WHERE id = $1`, [product.id])
+        if(result.rows.length == 1){
+        try{
+            let reviewsGiven = await pool.query(`SELECT * FROM reviews WHERE productid = $1`, [product.id])
+            for (let i = 0; i < reviewsGiven.rows.length; i++) {
+                 details = reviewsGiven.rows[i]
+                 reviews += `<div class="reviews">
+                 <p>${details.username}:</p>
+                 <p>${details.review}</p>
+                 <p>${details.date}</p>
+                 </div>` 
+            }
+        } catch(err){
+            console.log(err)
+        }
+
+            let orderImageUrl
+            let width
+
+            let url1 = `/product-view?id=${result.rows[0].id}&category=${result.rows[0].category}`
+            let url2 = `/review?id=${result.rows[0].id}&category=${result.rows[0].category}`
+            let url3 = `/about-seller?id=${result.rows[0].id}&category=${result.rows[0].category}`
+            let productView = layoutProductView + `<body>
+                            <div class="notification">
+                            <div class="notification-container" style="background-color: ${message_color};">${message}</div>
+                            </div>
+                            <script>
+                            let div = document.getElementsByClassName('notification')[0];
+                            let secDiv = document.getElementsByClassName('notification-container')[0];
+                            if(secDiv.style["background-color"] != 'transparent'){
+                                setTimeout(() => {
+                                    div.style.animation = "slideBackToTop 250ms ease-in"
+                                    setTimeout(() => {
+                                    div.style["background-color"] = ""
+                                    div.style.color = "transparent"
+                                    setTimeout(() => {
+                                        div.remove()
+                                    }, 100);
+                                    }, 250);
+                                }, 5000);
+                            }
+                            else if (secDiv.style["background-color"] == 'transparent'){
+                                div.remove();
+                                console.log('removing');
+                            }
+                            </script>
+                        
+                            <header id="header" class="header">
+                            <!-- Navigation -->
+                            <div class="navigation">
+                                <div class="container">
+                                <nav class="nav__center">
+                                    <div class="nav__header">
+                                    <div class="nav__logo">
+                                    <a href="/homepage"><img src="svg/The-Monk-store.svg"></a>
+                                    </div>
+                                        <div class="nav__hamburger">
+                                        <span>
+                                        <svg>
+                                            <use xlink:href="./images/sprite.svg#icon-menu"></use>
+                                        </svg>
+                                        </span>
+                                    </div>
+                                    </div>
+                        
+                                    <div class="nav__menu">
+                                    <div class="menu__top">
+                                        <h1 class="nav__category">Monk<span>Store</span></h1>
+                                        <div class="close__toggle">
+                                        <svg>
+                                            <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                                        </svg>
+                                        </div>
+                                    </div>
+                                    <ul class="nav__list">
+                                        <li class="nav__item">
+                                        <a href="/homepage" class="nav__link scroll-link">Home</a>
+                                        </li>
+                        
+                                        <li class="nav__item">
+                                        <a href="/settings" class="nav__link scroll-link">Settings</a>
+                                        </li>
+                        
+                                        <li class="nav__item">
+                                        <a href="/order-history" class="nav__link scroll-link">Order History</a>
+                                        </li>
+                                    </ul>
+                                    </div>
+                                </nav>
+                                </div>
+                            </div>
+                        
+                            <section>
+                                <div class="card" style="height: 500px;">
+                        
+                                    <!-- Head Content -->
+                        
+                                    
+                                    <div class="desc-content">
+                                        <div class="desc-nav">
+                                            <span><a href="${url1}">Description</a></span>
+                                            <span><a href="${url2}">Reviews</a></span>
+                                            <span><a href="${url3}">About</a></span>
+                                        </div>
+
+                                        <div class="write-review">
+                                        <form action="/review" method="POST">
+                                        <input type="hidden" name="id" value="${result.rows[0].id}">
+                                        <input type="hidden" name="category" value="${result.rows[0].category}">
+                                        <input type="text" name="review" placeholder="write your review">
+                                        <button type="submit" class="btn wishlist spinner-btn">Add Review</button>
+                                        </form>
+                                        </div>
+
+                                        <div class="review-card">
+                                        ${reviews}
+                                        </div>
+                                    </div>
+                                
+                                <!--  Bottom Content  -->
+                        
+                                   
+                                </div>
+                                ${homepageSpinner}
+                            </section>
+                        
+                            <!-- Hero -->
+                            </header>
+                            <main>
+                            
+                        
+                        
+                                    
+                            <!-- Footer -->
+                            <footer id="footer" class="section footer">
+                                <div class="container">
+                                <div class="footer__top">
+                                    <div class="footer-top__box">
+                                    <h3>EXTRAS</h3>
+                                    <a href="#">Brands</a>
+                                    <a href="#">Gift Cards</a>
+                                    <a href="#">Specials</a>
+                                    <a href="#">Support</a>
+                                    </div>
+                                    <div class="footer-top__box">
+                                    <h3>INFORMATION</h3>
+                                    <a href="#">About Us</a>
+                                    <a href="#">Privacy Policy</a>
+                                    <a href="#">Terms & Conditions</a>
+                                    <a href="#">Contact Us</a>
+                                    </div>
+                        
+                                    <div class="footer-top__box">
+                                    <h3>MY ACCOUNT</h3>
+                                    <a href="#">My Account</a>
+                                    <a href="#">Order History</a>
+                                    <a href="#">Cart</a>
+                                    <a href="#">FeedBack</a>
+                                    <a href="#">Returns</a>
+                                    </div>
+                                    <div class="footer-top__box">
+                                    <h3>CONTACT US</h3>
+                                    <div>
+                                    B8-Jabalpur, 482002
+                                    </div>
+                                    <div>
+                                        keplons@outlook.com
+                                    </div>
+                                    <div>
+                                    +91-9878881179
+                                    </div>
+                                    <div>
+                                    Madhya Pradesh, India.
+                                    </div>
+                                    </div>
+                                    <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+                                    <strong>
+                                        <a href="#">The Monk Store.Inc</a>
+                                    </strong>
+                                    </div>
+                                </div>
+                                </div>
+                                </div>
+                            </footer>
+                            <!-- End Footer -->
+                            </main>
+                        </body>
+                        `
+
+        return productView
+        
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+    
+}
+
+async function aboutSellerRender(message_type, message_text, user, product){
+    if (message_type) {
+        message_color = 'lightgreen'
+    }
+    else if (message_type == '') {
+        message_color = 'transparent'
+    }
+    else{
+        message_color = '#ff7271'
+    }
+
+    message = message_text
+    let sellerDetails
+
+    layoutProductView = `<!DOCTYPE html>
+                        <head>
+                        <meta charset="UTF-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+                        <link rel="stylesheet" href="css/product-view.css" />
+                        <link rel="stylesheet" href="css/about-seller.css" />
+                        <link rel="stylesheet" href="css/spinner.css" />
+                        <link rel="stylesheet" href="css/homepage-error.css" />
+                        
+                        <title>The Monk Store-Product View</title>
+                        </head>`
+
+    try{
+        let result = await pool.query(`SELECT * FROM products WHERE id = $1`, [product.id])
+        if(result.rows.length == 1){
+            let orderImageUrl
+            let width
+
+            try {
+                let result_seller = await pool.query(`SELECT name, email FROM users WHERE email = $1`, [result.rows[0].seller])
+                if(!result_seller.rows[0]){
+                    sellerDetails = {
+                        name: `The Monk Store`,
+                        email: `keplons@outlook.com`
+                    }
+                }
+                else{
+                    sellerDetails = {
+                        name: result_seller.rows[0].name,
+                        email: result_seller.rows[0].email
+                    }
+                }
+            } catch (error) {
+                console.log(error)
+            }
+
+            let url1 = `/product-view?id=${result.rows[0].id}&category=${result.rows[0].category}`
+            let url2 = `/review?id=${result.rows[0].id}&category=${result.rows[0].category}`
+            let url3 = `/about-seller?id=${result.rows[0].id}&category=${result.rows[0].category}`
+            console.log(sellerDetails)
+            let productView = layoutProductView + `<body>
+                            <div class="notification">
+                            <div class="notification-container" style="background-color: ${message_color};">${message}</div>
+                            </div>
+                            <script>
+                            let div = document.getElementsByClassName('notification')[0];
+                            let secDiv = document.getElementsByClassName('notification-container')[0];
+                            if(secDiv.style["background-color"] != 'transparent'){
+                                setTimeout(() => {
+                                    div.style.animation = "slideBackToTop 250ms ease-in"
+                                    setTimeout(() => {
+                                    div.style["background-color"] = ""
+                                    div.style.color = "transparent"
+                                    setTimeout(() => {
+                                        div.remove()
+                                    }, 100);
+                                    }, 250);
+                                }, 5000);
+                            }
+                            else if (secDiv.style["background-color"] == 'transparent'){
+                                div.remove();
+                                console.log('removing');
+                            }
+                            </script>
+                        
+                            <header id="header" class="header">
+                            <!-- Navigation -->
+                            <div class="navigation">
+                                <div class="container">
+                                <nav class="nav__center">
+                                    <div class="nav__header">
+                                    <div class="nav__logo">
+                                    <a href="/homepage"><img src="svg/The-Monk-store.svg"></a>
+                                    </div>
+                                        <div class="nav__hamburger">
+                                        <span>
+                                        <svg>
+                                            <use xlink:href="./images/sprite.svg#icon-menu"></use>
+                                        </svg>
+                                        </span>
+                                    </div>
+                                    </div>
+                        
+                                    <div class="nav__menu">
+                                    <div class="menu__top">
+                                        <h1 class="nav__category">Monk<span>Store</span></h1>
+                                        <div class="close__toggle">
+                                        <svg>
+                                            <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                                        </svg>
+                                        </div>
+                                    </div>
+                                    <ul class="nav__list">
+                                        <li class="nav__item">
+                                        <a href="/homepage" class="nav__link scroll-link">Home</a>
+                                        </li>
+                        
+                                        <li class="nav__item">
+                                        <a href="/settings" class="nav__link scroll-link">Settings</a>
+                                        </li>
+                        
+                                        <li class="nav__item">
+                                        <a href="/order-history" class="nav__link scroll-link">Order History</a>
+                                        </li>
+                                    </ul>
+                                    </div>
+                                </nav>
+                                </div>
+                            </div>
+                        
+                            <section>
+                                <div class="card" style="height: 500px;">
+                        
+                                    <!-- Head Content -->
+                        
+                                    
+                                    <div class="desc-content">
+                                        <div class="desc-nav">
+                                            <span><a href="${url1}">Description</a></span>
+                                            <span><a href="${url2}">Reviews</a></span>
+                                            <span><a href="${url3}">About</a></span>
+                                        </div>
+
+                                        <div>
+                                        <p>Seller: ${sellerDetails.name}</p>
+                                        <p>Contact: ${sellerDetails.email}</p>
+                                        </div>
+                                    </div>
+                                
+                                <!--  Bottom Content  -->
+                        
+                                   
+                                </div>
+                                ${homepageSpinner}
+                            </section>
+                        
+                            <!-- Hero -->
+                            </header>
+                            <main>
+                            
+                        
+                        
+                                    
+                            <!-- Footer -->
+                            <footer id="footer" class="section footer">
+                                <div class="container">
+                                <div class="footer__top">
+                                    <div class="footer-top__box">
+                                    <h3>EXTRAS</h3>
+                                    <a href="#">Brands</a>
+                                    <a href="#">Gift Cards</a>
+                                    <a href="#">Specials</a>
+                                    <a href="#">Support</a>
+                                    </div>
+                                    <div class="footer-top__box">
+                                    <h3>INFORMATION</h3>
+                                    <a href="#">About Us</a>
+                                    <a href="#">Privacy Policy</a>
+                                    <a href="#">Terms & Conditions</a>
+                                    <a href="#">Contact Us</a>
+                                    </div>
+                        
+                                    <div class="footer-top__box">
+                                    <h3>MY ACCOUNT</h3>
+                                    <a href="#">My Account</a>
+                                    <a href="#">Order History</a>
+                                    <a href="#">Cart</a>
+                                    <a href="#">FeedBack</a>
+                                    <a href="#">Returns</a>
+                                    </div>
+                                    <div class="footer-top__box">
+                                    <h3>CONTACT US</h3>
+                                    <div>
+                                    B8-Jabalpur, 482002
+                                    </div>
+                                    <div>
+                                        keplons@outlook.com
+                                    </div>
+                                    <div>
+                                    +91-9878881179
+                                    </div>
+                                    <div>
+                                    Madhya Pradesh, India.
+                                    </div>
+                                    </div>
+                                    <div class="footer_last">&copy; Copyright 2021 All Rights Reserved by 
+                                    <strong>
+                                        <a href="#">The Monk Store.Inc</a>
+                                    </strong>
+                                    </div>
+                                </div>
+                                </div>
+                                </div>
+                            </footer>
+                            <!-- End Footer -->
+                            </main>
+                        </body>
+                        `
+
+        return productView
+        
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+    
+}
 
 
 module.exports = {

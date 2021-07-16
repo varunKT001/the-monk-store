@@ -201,9 +201,28 @@ const addProductHelper = async (product, user)=>{
     }
 }
 
+const addReviewHelper = async (review, user, )=>{
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = mm + '/' + dd + '/' + yyyy
+    try{
+        console.log(review)
+        let result = await pool.query(`INSERT INTO reviews (productId, username, date, review) VALUES ($1, $2, $3, $4)`, [review.id, user.name, today, review.review])
+        return {val: true}
+    }
+    catch(err){
+        console.log(err)
+        return {val: false}
+    }
+}
+
 const removeProductHelper = async (product, user)=>{
     try{
         let result = await pool.query(`DELETE FROM products WHERE id = $1 AND seller = $2`, [product.id, user.email])
+        let result_order = await pool.query(`DELETE FROM orders WHERE productid = $1`, [product.id])
+        let result_cart = await pool.query(`DELETE FROM cart WHERE productid = $1`, [product.id])
         return {val: true}
     }
     catch(err){
@@ -944,6 +963,39 @@ app.post('/remove-seller-product', checkAuthorization, async (req, res)=>{
     }
     else{
         return res.redirect('/seller-product')
+    }
+})
+
+app.get('/review', checkAuthorization, async (req, res)=>{
+    product ={
+        id: req.query.id,
+        category: req.query.category
+    }
+    let review = await productRender.reviewRender('', '', req.user, product)
+    res.send(review)
+})
+
+app.get('/about-seller', checkAuthorization, async (req, res)=>{
+    product ={
+        id: req.query.id,
+        category: req.query.category
+    }
+    let review = await productRender.aboutSellerRender('', '', req.user, product)
+    res.send(review)
+})
+
+app.post('/review', checkAuthorization, async (req, res)=>{
+    review ={
+        id: req.body.id,
+        review: req.body.review,
+        category: req.body.category
+    }
+    let success = await addReviewHelper(review, req.user)
+    if(success.val){
+        return res.redirect(`/review?id=${review.id}&${review.category}`)
+    }
+    else{
+        return res.redirect(`/review?id=${review.id}&${review.category}`)
     }
 })
 

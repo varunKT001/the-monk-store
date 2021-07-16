@@ -1,0 +1,27 @@
+.desc-content .desc-nav{
+    margin-bottom: 10px;
+}
+
+.desc-content .desc-nav span a{
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 23px;
+    cursor: pointer;
+}
+
+.desc-content .desc-nav span:nth-child(1){
+    border-bottom: none;
+}
+
+.desc-content .desc-nav span:nth-child(2){
+    border-bottom: none;
+}
+
+.desc-content .desc-nav span:nth-child(3){
+    border-bottom: 1px solid red;
+}
+
+.desc-content .desc-nav span:hover{
+    border-bottom: 1px solid red;
+}
